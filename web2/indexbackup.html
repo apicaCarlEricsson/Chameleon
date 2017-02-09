@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/jquery-ui.structure.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/jquery-ui.theme.min.css" type="text/css">
+    <link rel="stylesheet" href="/semantic/dist/semantic.min.css" type="text/css">
+    <title>ZebraTester</title>
+</head>
+<body class="pushable">
+<div class="pusher">
+   <div class="ui fluid container">
+      <div class="ui hidden divider"></div>
+       <div class="ui massive attached tabular menu">
+           <div class="divider"></div>
+             <div class="ui middle aligned spaced medium image">
+              <img src="img/logga.png">
+            </div>
+            <div class="right menu">
+                <a class="active item" data-tab="build" data-vivaldi-spatnav-clickable="1">Build</a>
+                <a class="item" data-tab="run" data-vivaldi-spatnav-clickable="1">Run</a>
+                <a class="item" data-tab="analyze" data-vivaldi-spatnav-clickable="1">Analyze</a>
+                <a class="item" data-tab="empty" data-vivaldi-spatnav-clickable="1"></a>
+            </div>
+       </div>
+       <div class="ui bottom attached active tab segment" data-tab="build">
+            <div class="ui menu">
+                <div class="ui dropdown link item">
+                    <i class="list icon"></i>
+                    <span class="text">Menu</span>
+                    <div class="menu">
+                        <div class="header">File</div>
+                        <div class="item"><span class="text">New</span></div>
+                        <div class="item">Open...</div>
+                        <div class="item"><span class="text">Save</span></div>
+                        <div class="item">Save as...</div>
+                        <div class="divider"></div>
+                        <div class="header">Load Test</div>
+                        <div class="item">Quick Test</div>
+                        <div class="item">Generate Load Test</div>
+                        <div class="divider"></div>
+                        <div class="item">Clear Session</div>
+                    </div>
+                </div>
+                <div class="ui dropdown link item">
+                    <i class="book icon"></i>
+                    <span class="text">View</span>
+                    <div class="menu">
+                        <div class="header">Panels</div>
+                        <div class="item"><span class="text">Toggle Var Handler</span></div>
+                        <div id='toggleRecorder' class="item">Toggle Recorder</div>
+                        <div class="item">Toggle Project Navigator</div>
+                        <div class="divider"></div>
+                        <div class="header">Display</div>
+                        <div class="item">Original Item Numbers</div>
+                        <div class="item">Current Item Numbers</div>
+                        <div class="item">Runtime Configuration</div>
+                        <div class="item">Item Offset</div>
+                        <div class="item">Content Type</div>
+                        <div class="item">Content Verification</div>
+                    </div>
+                </div>
+                <div class="ui dropdown link item">
+                    <i class="filter icon"></i>
+                    <span class="text">Filter items</span>
+                    <div class="menu">      
+                        <div class="header">Sort by</div>
+                        <div class="item">Host</div>
+                        <div class="item">Content Type</div>
+                        <div class="item">Status Code</div>
+                        <div class="divider"></div>
+                        <div class="header">Exclude</div>
+                        <div class="item">Static Content</div>
+                        <div class="item">Cached Content</div>
+                        <div class="divider"></div>
+                        <div class="item">Clear Filter</div>
+                    </div>
+                </div>
+                <div class="right menu">
+                    <div class="item">
+                         <div class="ui icon input">
+                            <input type="text" placeholder="Search...">
+                            <i class="search link icon"></i>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div id="pageBreakSegments" class="ui segments">
+                <div id="pageBreakSegment" class="ui segment">
+                    <div class="ui fluid accordion">
+                        <div class="title">Page Break #1</div>
+                        <div class="content">
+                            <div id="urlSegments" class="ui segments">
+                                <div id="urlSegment" class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #1</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div id="headerSegment" class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Magnam, porro libero?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Hic, inventore, nobis.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quas, at, quaerat.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quae, minima molestias!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur porro dignissimos minus delectus tenetur commodi.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Pariatur, quis, atque!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quia maiores, nesciunt!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nulla neque, dolorem.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nobis, cupiditate, totam.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae quisquam ipsa veniam commodi nisi quos.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #2</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Culpa, odio exercitationem?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eos, minima, enim.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ullam, sequi, earum!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Dolores natus, tempora.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Qui, esse error, pariatur sed, recusandae at odio dicta illo, consequuntur voluptate incidunt doloribus et.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Expedita, eius, obcaecati.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Rem, blanditiis, deleniti.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ratione, non, assumenda.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Omnis, optio, eius.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Qui saepe quae tempora placeat explicabo dolore libero doloribus magni quaerat voluptas quis velit, culpa.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #3</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Harum, fugit. Vitae?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ratione, porro, neque.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Consequuntur, temporibus, autem!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Amet, debitis, veritatis!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Repellat similique, nulla veritatis sunt inventore. Deserunt voluptatem, veritatis impedit est id accusamus necessitatibus rerum?</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Alias recusandae, commodi.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Pariatur, cum, reiciendis!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Facilis, natus doloremque?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Vitae, ad ullam.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Modi magni perspiciatis dolorem delectus id tempore culpa est nulla accusantium possimus! Accusamus, velit, quia.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #4</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Autem, inventore, perspiciatis?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eligendi quae, necessitatibus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Deserunt, sapiente, delectus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Fuga, veritatis, commodi.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Ipsa adipisci, inventore iste odit impedit commodi. Veritatis quo alias libero facilis enim quaerat eligendi.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Atque possimus, vitae!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Laboriosam, error, laudantium.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Iure, itaque, quidem?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Excepturi inventore, ratione.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Atque perspiciatis aliquid dolores explicabo vel nostrum alias ut sit similique? Officiis repudiandae corporis ullam.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #5</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eos, laboriosam, culpa?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Officia, id, sapiente?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Illum, provident, voluptas.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Rerum, molestias doloremque.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Voluptatibus nesciunt modi sequi autem earum cum quibusdam temporibus architecto, perferendis inventore doloribus nostrum nihil.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Neque, quae praesentium.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Velit, libero enim.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Dicta, fugit, labore!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Praesentium, quisquam, voluptatibus.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Dolore eum cumque voluptatibus nihil atque reprehenderit sapiente, vero excepturi, fuga cupiditate soluta labore, maiores.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="ui fluid accordion">
+                        <div class="title">Page Break #2</div>
+                        <div class="content">
+                            <div id="urlSegments" class="ui segments">
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #1</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Aut, eius ad.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Repellendus, ex, nisi.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Illo, quam, dolorem.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Sit, perspiciatis inventore?</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis iure, velit corrupti impedit delectus nemo.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Reprehenderit, magni, sunt.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Excepturi, ex, quasi.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Perspiciatis, aut, dolorum.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Repellat in, at.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam velit, iusto, similique impedit alias aut?</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #2</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Dignissimos, repudiandae, iure.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Officiis amet, at.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Voluptas sit, illum?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ipsum, a, consequuntur?</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Corrupti molestias nulla eius dolores temporibus cupiditate hic mollitia, adipisci pariatur maiores, delectus minus similique.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Praesentium, temporibus, nam.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Aliquam voluptatem, temporibus!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Veritatis, soluta recusandae.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Suscipit, id earum.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Amet optio inventore quisquam, odit laborum possimus dignissimos autem, obcaecati tenetur pariatur, nostrum, nam adipisci?</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #3</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Odit nulla, nobis.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Facilis, eligendi sint.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Illum adipisci, amet.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quos, eligendi, nihil.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Rerum quasi assumenda alias, facilis similique. Illum, beatae culpa cum iusto omnis officiis quia minus.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Veniam, necessitatibus, ab.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Molestias omnis, dolores.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eum fuga, laudantium.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Aliquam, corporis ratione!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Libero dolorum officiis ab recusandae pariatur magni, nulla modi in dolores doloremque saepe quos accusamus.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #4</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Dolorum, placeat, autem.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Adipisci, provident, neque.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Suscipit sequi, sapiente!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Dignissimos, corporis ratione?</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Blanditiis nobis, animi officia omnis quis tempore? Alias blanditiis id dicta, esse quae quis omnis.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Atque, dolor, praesentium.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Asperiores, obcaecati libero.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Perferendis, dolores, veritatis.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Illo ratione, nostrum!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Distinctio cum fugiat at ad, recusandae iusto temporibus molestias, voluptates totam vero deserunt, amet debitis!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #5</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Molestias, illum, necessitatibus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Vitae voluptas, corporis!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quis, perferendis error.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Tenetur repellat, perferendis.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Ex eligendi eius expedita, et, maxime quasi sunt eveniet distinctio, tempora ut commodi rem iste?</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Neque ab, quis.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Inventore, molestiae reprehenderit.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Placeat, eaque aperiam!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Officiis ut, veniam.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Maiores aperiam dolores quod facilis magnam minima eum tenetur molestiae ut blanditiis, rerum repellat pariatur.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="ui fluid accordion">
+                        <div class="title">Page Break #3</div>
+                        <div class="content">
+                            <div id="urlSegments" class="ui segments">
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #1</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Deleniti, alias, modi!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Atque, minus, nesciunt.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Voluptatum, delectus, perspiciatis.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Enim, eius, odit.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium provident enim blanditiis, obcaecati distinctio qui!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Iusto, eaque officiis!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Vero, eveniet, quia.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Illo, pariatur reprehenderit.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Alias, harum, ipsa.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio, quis tempore eveniet nihil numquam in.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #2</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nulla, esse debitis.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quis, qui, delectus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eveniet, ea, blanditiis.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Rerum, rem magnam.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Temporibus ratione ad dolor, possimus eligendi quidem, facere dolores dolorem alias, tenetur suscipit ut dolorum!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Sed, corporis, accusamus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Cupiditate quae, nulla!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Rem nemo, sunt!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nam, quis, ipsum.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Minus esse vitae deserunt officia. Ad facere, cupiditate, nemo architecto consequuntur error velit numquam tempora!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #3</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Repudiandae, in, quod.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Hic, distinctio obcaecati?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Tempora, porro, temporibus!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Omnis, obcaecati, ut!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Eligendi dignissimos, pariatur quidem rem, minima corporis temporibus earum, a nostrum soluta cupiditate! Natus, sit.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ratione, dolore aperiam?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Debitis, ipsa, neque.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Iusto, quasi sit.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Unde, iusto, accusantium.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Excepturi, soluta natus. Facere voluptatum, asperiores culpa ab sit tempora beatae fugiat eos harum corrupti.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #4</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nam aperiam, in.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Fuga, quibusdam, ipsum.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quos, voluptatum molestiae.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Soluta, odio, animi.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Saepe ullam at, nemo molestias minus est praesentium velit labore totam quidem magni quos id!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Vitae, est, odit!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Repudiandae, error, eaque.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Distinctio, eum, voluptate!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quasi, est neque.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Numquam, iusto, dolore. Nobis a voluptatem quasi quam, optio accusamus eum. Accusamus quam aliquam adipisci.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #5</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Itaque, molestiae, iste.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Iusto, laborum, fugiat.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eum, qui ipsum.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Recusandae, quaerat, ratione.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Fuga praesentium quaerat laborum velit dolore, nobis ducimus, architecto voluptatem dolor natus, aut delectus vel!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ab, necessitatibus, voluptates.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Unde, eaque fugit!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Labore, nam, vitae.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eum, iusto soluta?</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Explicabo dolorem vero sequi porro beatae iusto iure qui, voluptates. Similique sequi labore deleniti rerum.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="ui fluid accordion">
+                        <div class="title">Page Break #4</div>
+                        <div class="content">
+                            <div id="urlSegments" class="ui segments">
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #1</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Voluptatem, corporis, cumque.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>At, similique, eveniet?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quasi, distinctio aliquid!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Id, dolorum, culpa?</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi minima ullam, veritatis quasi aperiam adipisci.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quae, odit, eaque?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Sit, provident hic.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Qui, ducimus, explicabo!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Magnam, vitae, sunt.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit consequatur, vero sit eligendi, odit labore.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #2</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ea, deserunt? Iure.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Reiciendis, earum, reprehenderit.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Magni, veniam magnam?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Cum, eos, minus?</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Laudantium at eaque aliquid fuga quod alias, et necessitatibus aspernatur tempore odit! Quis, dolorum, iure!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Unde, neque, iste.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quaerat, consectetur, consequatur.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Aliquam, quas corrupti.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Excepturi, quod, non.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Nulla harum odit, labore ea placeat error ab dignissimos laboriosam nihil. Deleniti aperiam molestias modi.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #3</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nulla, quasi unde.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Sed facere, dolorem.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Fugiat, veniam minus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Et, architecto, consequuntur.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Facilis ea asperiores inventore possimus quo cupiditate mollitia tempora, facere saepe doloribus voluptates omnis quis!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Enim, sunt, esse.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Officiis, expedita, necessitatibus?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nostrum, quam, dolorem.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ipsum neque, dolor.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Asperiores recusandae rem esse, voluptate vero, dolor, animi suscipit laborum ipsa accusamus labore consectetur! Suscipit?</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #4</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Aliquam illum, quas.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Tenetur maiores, laborum.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Magnam, id vitae?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ad, odio, iure!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Mollitia harum eius officia ut praesentium, porro facere assumenda dicta quam repellendus natus et culpa.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Iusto, enim mollitia.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Obcaecati, iure dignissimos.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Vero, unde, minus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Aliquam, quaerat, velit!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Repellat distinctio officiis libero dolor, quo, animi blanditiis maxime, cum, cumque omnis numquam culpa nobis.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #5</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quam, ab provident.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Sequi magni, ipsum.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Itaque, possimus, nesciunt.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Rerum quidem, exercitationem.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Inventore natus facilis itaque molestias perspiciatis quidem, assumenda omnis saepe veritatis accusantium deleniti beatae, at?</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Rem, tempora, rerum.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Repudiandae, error, nam?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quis, quibusdam, error.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ipsum, quae, nesciunt.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">A corporis dolores, natus reiciendis dicta ad dignissimos officiis excepturi non aliquid, nisi accusantium deleniti.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="ui fluid accordion">
+                        <div class="title">Page Break #5</div>
+                        <div class="content">
+                            <div id="urlSegments" class="ui segments">
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #1</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nam, illo, tempore.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Dolorem, distinctio tempore.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Sed, corporis, aliquam!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ratione culpa, quidem!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis fuga at iure, beatae corrupti sequi.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Laudantium, non, deleniti.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Voluptate, vero, veniam!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ipsam, voluptates, laboriosam.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Voluptate, voluptates, nesciunt!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt cupiditate eaque dolorum, fuga reprehenderit eveniet?</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #2</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Possimus nihil, officiis?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Maiores, tempore, consequuntur!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Distinctio, doloremque, temporibus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quam, quos, dignissimos.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Sunt sit at totam assumenda dolorem obcaecati perferendis hic illo, natus neque unde, eius sapiente!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Asperiores, repellendus, reprehenderit.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eos, vero, modi!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nemo, hic, magnam.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quia, commodi, blanditiis.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Aut deleniti, quisquam in, beatae aperiam ipsa mollitia, facere aspernatur nam sed ab libero tenetur.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #3</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Voluptatum, vel dicta.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Dolor nesciunt, nam.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Dolores, quo deleniti.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eius, doloribus, facere!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Mollitia cum et, dignissimos tenetur odio exercitationem non illum, distinctio ratione aut odit ut adipisci.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Numquam necessitatibus, quasi!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nulla, officia, neque.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Dolores fuga, explicabo.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Voluptates, laudantium, omnis.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Explicabo atque, distinctio facere fugit aliquid dolorum sequi. Nobis fugit consequuntur adipisci, ipsa dignissimos molestiae!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #4</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Iure tempore, a!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Sequi, dolorem, cupiditate.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Id, reiciendis, nemo.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Non, sequi, nisi.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Dolor odio facere laborum fuga eius quibusdam ducimus tempore, quos nesciunt enim officia repudiandae, perferendis.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Expedita, tenetur, dignissimos.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Fuga, sint, culpa.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Cupiditate, ipsa provident.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Labore, accusamus. Aliquid.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Maiores sint iure, at neque quibusdam aliquid expedita eligendi nihil. Architecto delectus unde sit aut.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #5</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Necessitatibus, veniam, sunt.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Minima rerum, cum!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Quos, magnam, qui?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Consectetur, repellendus, itaque.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Magni, ex dicta blanditiis libero praesentium voluptatem id omnis! Dicta quibusdam obcaecati labore quo magnam.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Iste, repellat officia.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Delectus, reiciendis, reprehenderit.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Doloremque, nemo expedita!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Neque, veritatis. Reiciendis.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Voluptatibus, temporibus explicabo exercitationem. Explicabo amet iusto quidem itaque praesentium nisi optio, tempora quos porro!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="ui fluid accordion">
+                        <div class="title">Page Break #6</div>
+                        <div class="content">
+                            <div id="urlSegments" class="ui segments">
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #1</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Animi, laudantium, quam.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Illo, maxime, nisi!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Eius, atque, similique?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Fuga, accusantium asperiores.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque totam sequi, porro quidem nesciunt repudiandae!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Laboriosam, quis, molestiae.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Laudantium, doloremque, repudiandae.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Corporis, vitae illo.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Necessitatibus, veritatis, mollitia!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime nam, hic sit voluptatibus quisquam eos?</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #2</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Repudiandae, consequatur, atque!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Consequatur, at nesciunt.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Repudiandae, nihil, error?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Perspiciatis, dolore, magnam!</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Fugit quae hic, suscipit facilis sint ut ipsa saepe repudiandae facere assumenda in rem vero.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Sapiente, velit assumenda.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Officiis, enim, praesentium.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Blanditiis, ratione, explicabo.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Laudantium, non iste.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Laboriosam totam libero ipsam illo dolor commodi eveniet laudantium voluptate dolorem, officia ab necessitatibus ex!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #3</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>A, recusandae voluptates.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nam, ipsa, repellendus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Minus, magnam, quas!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Voluptatum, dicta quaerat.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Commodi facere natus doloribus, quam. Consequatur laborum voluptatem, vero. Illo asperiores tenetur soluta totam vel.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Iure, eaque, culpa.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nam, quaerat voluptas.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Qui, fuga, rem!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Impedit, praesentium, magni.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Dolorum ducimus molestiae soluta, repellat est eius, asperiores nemo, enim rerum perspiciatis vitae quos ratione.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #4</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Esse, aliquam molestias.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ut autem, dolorum?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Deleniti, quisquam, repellendus.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nulla, iusto, necessitatibus.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Ullam quos harum nobis, dolorem perspiciatis hic porro, numquam voluptatum officiis eos impedit ea reiciendis.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Consectetur, tempore. Eum.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Doloribus, qui quae!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ipsa, sit, earum.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Exercitationem, quia, reiciendis?</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Placeat harum, eveniet laborum fugit reiciendis, consectetur odio in numquam enim similique voluptatibus reprehenderit ab.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui segment">
+                                    <button id="serialParallelButton" class="circular ui right floated toggle button">S</button>
+                                    <div class="accordion">
+                                        <div class="title">URL #5</div>
+                                        <div class="content">
+                                            <div class="ui two column grid">
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestHeaderHead" class="ui attached yellow inverted segment">
+                                                                <div class="ui medium header">Request Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Ipsam, pariatur quo.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Porro nobis, non!</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Impedit, quam, rem.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Provident, laborum, enim.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="requestContentHead" class="ui yellow inverted attached segment">
+                                                                <div class="ui medium header">Request Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Quod ut maxime, non laborum soluta sapiente, eos alias dolorum odit itaque et numquam asperiores!</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseHeaderHead" class="ui attached olive inverted segment">
+                                                                <div class="ui medium header">Response Header</div>
+                                                            </div>
+                                                            <div class="ui attached segment"><b>Header: </b>Lorem ipsum dolor.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Saepe, quia, rerum.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Minus nam, provident.</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Provident, tempora dolor?</div>
+                                                            <div class="ui attached segment"><b>Header: </b>Nobis, adipisci est.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div class="ui segments">
+                                                            <div id="responseContentHead" class="ui olive inverted attached segment">
+                                                                <div class="ui medium header">Response Content</div>
+                                                            </div>
+                                                            <div class="ui attached segment">Voluptatum laudantium autem maiores, ad inventore, nisi, sint sed possimus consequatur quo nesciunt enim minima.</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ui two column centered grid">
+                <div id="recorderSpace" class="column"></div>
+            </div>
+           
+           </div>
+            
+        <div class="ui bottom attached tab segment" data-tab="run">
+            Run
+        </div>
+        <div class="ui bottom attached tab segment" data-tab="analyze">
+            Analyze
+        </div>
+   </div>
+   </div>
+   <!-------- <div id="recorderToolbar" class="ui bottom inverted sidebar"><button id="recorderButton" class="ui button"><i class="play icon"></i>Record</button><div class="ui input"><input type="text" placeholder="Insert pagebreak..."></div></div> ---->
+    <script src="/js/jquery-3.1.1.min.js" type="application/javascript"></script>
+    <script src="/js/jquery-ui.min.js" type="application/javascript"></script>
+    <script src="/semantic/dist/semantic.min.js" type="application/javascript"></script>
+    <script src="/js/mustache.min.js" type="application/javascript"></script>
+    <script>
+        $(document).ready(function(e) {   
+            $('.right.menu .item').tab();
+            $('#recorderToolbar').sidebar('toggle').sidebar({context: $("div#recorderSpace")});
+            $('.dropdown').dropdown({action: 'select'});
+            $('.ui.accordion').accordion();
+            var $toggle  = $('.ui.toggle.button');
+            $toggle.state({text: {inactive : 'S',active   : 'P'}});
+            $("div[id^='urlSeg']").sortable({connectWith: "div#urlSegments.ui.segments", placeholder: "ui-state-highlight"}).disableSelection();
+            $("div[id^='pageBreakSeg']").sortable({connectWith: "div#pageBreakSegments.ui.segments", placeholder: "ui-state-highlight"}).disableSelection();
+        });
+    </script>
+</body>
+</html>

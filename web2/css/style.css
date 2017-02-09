@@ -1,0 +1,136 @@
+.ui.accordion .accordion {
+    margin: 0 0 0 !important;
+    padding: 0;
+}
+
+button#serialParallelButton.ui.right.floated.toggle.button.active{
+    background-color: rgba(17, 59, 154, 0.77)!important;
+    color: white!important;
+    border: 3px solid rgba(34,36,38,.15)!important;
+}
+
+button#serialParallelButton.ui.right.floated.toggle.button{
+    background-color: #d25256!important;
+    color: white!important;
+    border: 3px solid rgba(34,36,38,.15)!important;
+}
+
+.ui-sortable-helper{
+    border: 1px solid rgba(34,36,38,.15)!important;
+}
+
+#requestHeaderHead, #requestContentHead, #responseHeaderHead, #responseContentHead {
+    border-color:inherit!important;
+}
+
+.title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ui#contentTypeLabel.label {
+    margin-right: 1em;
+    min-width: 5em!important;
+    text-align: center!important;
+}
+
+#headerSegment{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#requestContentSegment #responseContentSegment{
+    overflow: scroll;
+    text-overflow: ellipsis;
+    word-wrap: break-all;
+}
+
+.ui#urlSegment.segment{
+    padding: 0.3em;
+}
+
+.item#urlSizeText {
+    float: right;
+    padding: 0.5em;
+}
+
+#urlSegmentGroup{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.container{
+    height: 100vh;
+}
+
+
+#recorderToolbar{
+    width: 35.7em!important;
+}
+
+h3.ui.header {
+    display: inline-block;
+    margin: 0 0 0 0;
+}
+
+div#record.link.item{
+    width: 9.2em;
+}
+
+div#record.link.item.recording{
+    background-color: red;
+    color: white;
+    width: 9.2em;
+}
+
+div#record.link.item{
+    background-color: rgb(124, 193, 66);
+    color: white;
+    width: 9.2em;
+}
+
+#saveDialog {
+    background: rgba(225, 0, 0, 0);
+    overflow: hidden;
+    box-shadow: none;
+}
+#saveDialogChild {
+    background: white;
+    color: black;
+    overflow: hidden;
+    height: 10.5em;
+    border-radius: 0.5em;
+    border: 1px solid rgba(34,36,38,.15);
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+}
+
+body > div > div.ui.bottom.attached.active.tab.segment {
+    height: 100vh;
+}
+
+#saveDialogChild > .item {
+    border-top: 1px solid rgba(34,36,38,.15);
+}
+
+#savePrxDatAs{
+    color: black;
+}
+
+#savePrxDatAs:hover{
+    color: black;
+    background: rgba(124, 193, 66,.1)
+}
+
+#saveAsLabel {
+    margin-top: 1em;
+}
+
+#myLogo{
+    padding-left: 0.5em;
+}
+
+#statusNotifier{
+  margin-left: 4em;
+  margin-bottom: 0;
+}
