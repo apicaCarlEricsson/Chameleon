@@ -1,0 +1,5 @@
+NoFailureActionContentTypes = image/*, *javascript*, text/css, *shockwave-flash*, video/*, application/font*
+NoFailureActionHttpResponseCodes = 
+
+NoResponseContentVerificationHttpResponseCodes = 301, 302, 303, 307, 4*, 5*
+MaxStoredResponseContentSize = 5242880

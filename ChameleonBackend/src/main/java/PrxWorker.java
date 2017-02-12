@@ -1,5 +1,6 @@
 import dfischer.generator.CreateLoadtestProgram;
 import dfischer.proxysniffer.*;
+import dfischer.utils.LoadtestInlineScriptContext;
 import dfischer.utils.NextProxyConfig;
 import dfischer.webadmininterface.DisplayListCache;
 
@@ -20,11 +21,7 @@ import java.util.Vector;
  */
 public class PrxWorker {
 
-    private DisplayListCache cache = new DisplayListCache();
-
     private ProxyDataDump prxdat;
-
-    private PrxdatMirror mirror;
 
     public PrxWorker(){
         prxdat = new ProxyDataDump();
@@ -32,27 +29,6 @@ public class PrxWorker {
         prxdat.setProjectName("-1");
     }
 
-
-    /*public PrxWorker(){
-        String fileName = "LoginLogoutSingapore.prxdat";
-        prxdat = new ProxyDataDump();
-        mirror = new PrxdatMirror(prxdat);
-
-        try {
-            prxdat.readObject(new DataInputStream(new FileInputStream(fileName)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ProxySnifferVarHandlerDupScopeException e) {
-            e.printStackTrace();
-        } catch (ProxySnifferVarHandlerInvNameException e) {
-            e.printStackTrace();
-        } catch (ProxySnifferVarHandlerKeywordException e) {
-            e.printStackTrace();
-        }
-        fileName = fileName.replace(".prxdat","");
-
-        prxdat.setProjectName(fileName);
-    }*/
 
     public PrxWorker(String fileName){
         prxdat = new ProxyDataDump();
@@ -71,13 +47,109 @@ public class PrxWorker {
 
         prxdat.setProjectName(fileName);
 
-        //DirectoryNavigatorStoreContext
+
     }
 
     public void clearPrxDat (){
         prxdat = new ProxyDataDump();
 
         prxdat.setProjectName("-1");
+    }
+
+    public void addInlineScript(String title, String execScope, String sourceCode, String[] inputVars, String[] outputVars){
+        ProxySnifferVarSourceInlineScript inlineScript;
+
+        switch (execScope){
+            case "all_urls_start":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_ALL_URLS_START,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+            case "global_start":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_GLOBAL_START,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+            case "global_end":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_GLOBAL_END,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+            case "user_start":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_USER_START,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+            case "user_end":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_USER_END,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+            case "loop_start":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_LOOP_START,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+            case "loop_end":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_LOOP_END,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+            case "all_urls_end":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_ALL_URLS_END,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+            default:
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_URL_END,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+        }
+
+        inlineScript.setInlineScriptTitle(title);
+        inlineScript.setInlineScriptCode(sourceCode);
+
+        inlineScript = (ProxySnifferVarSourceInlineScript) prxdat.getVarSourceHandler().addVarSource(inlineScript);
+
+
+
+    }
+
+    public ProxySnifferVar[] getAllVars(){
+        return prxdat.getVarHandler().getVars();
+    }
+
+    public ProxySnifferVarSourceDataInstance[] getAllInlineScripts(){
+        return prxdat.getVarSourceHandler().getVarSources();
+    }
+
+    public void connectInlineWithVar (ProxySnifferVarSourceInlineScript inlineScript){
+
+    }
+
+    public ProxySnifferVar createVariable (String scope, String varName){
+        ProxySnifferVar newVar;
+        switch (scope) {
+            case "global":
+                newVar = new ProxySnifferVar(ProxySnifferVar.SCOPE_GLOBAL,varName);
+                break;
+            case "loop":
+                newVar = new ProxySnifferVar(ProxySnifferVar.SCOPE_LOOP,varName);
+                break;
+            case "innerloop":
+                newVar = new ProxySnifferVar(ProxySnifferVar.SCOPE_INNER_LOOP,varName);
+                break;
+            case "user":
+                newVar = new ProxySnifferVar(ProxySnifferVar.SCOPE_USER,varName);
+                break;
+            default:
+                newVar = new ProxySnifferVar(ProxySnifferVar.SCOPE_GLOBAL,varName);
+                break;
+        }
+
+        try {
+            newVar = prxdat.getVarHandler().addVar(newVar);
+        } catch (ProxySnifferVarHandlerDupScopeException e) {
+            System.out.println("ProxySniffer VarHandler DupScope exception encountered when trying to create variable "+varName);
+        } catch (ProxySnifferVarHandlerInvNameException e) {
+            System.out.println("ProxySniffer VarHandler Invname exception encountered when trying to create variable "+varName);
+        } catch (ProxySnifferVarHandlerKeywordException e) {
+            System.out.println("ProxySniffer VarHandler Keyword exception encountered when trying to create variable "+varName);
+        }
+
+        return newVar;
     }
 
     public void generateLoadTest() throws Exception {
@@ -225,11 +297,6 @@ public class PrxWorker {
         }
         return urlVector;
     }
-
-    public Vector fetchUrlDetails (){
-       return mirror.returnEntireList();
-    }
-
 
 
 }

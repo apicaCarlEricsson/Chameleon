@@ -29,6 +29,16 @@ public class Main {
                 }
         );
 
+        get("/getAllVars", (req, res) -> {
+            res.type("application/json");
+            return gsonPrxDat.toJson(worker.getAllVars());
+
+        });
+        get("/getInlineScripts", (req, res) -> {
+            res.type("application/json");
+            return gsonPrxDat.toJson(worker.getAllInlineScripts());
+
+        });
 
 
         get("/openScript/:filename", (req, res) ->
@@ -127,7 +137,7 @@ public class Main {
             return 200;
         });
 
-        File parent = new File(System.getProperty("user.dir")).getParentFile();
+        File parent = new File(System.getProperty("user.dir"));
 
         Butler.startConsole(new String[]{"-RESTAPIServer","-webadmin", "-ExecAgent", "-runtimedatadir", parent.getPath()+"/RuntimeData","-jobdir",parent.getPath()+"/ExecAgentJobs"});
 

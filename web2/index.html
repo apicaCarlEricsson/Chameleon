@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            <div id="listView" class="segment pushable">
+            <div id="listView" class="pushable">
                 <div class="pusher">
                     <div id="metaDataView" class="ui basic segment">
                     </div>
@@ -133,11 +133,14 @@
                         Save
                     </div>
                     </div>
-
-            </div>
-
-           </div>
-   </div>
+                </div>
+                <div id="varHandler" class="ui right vertical sidebar menu">
+                   <div class="item">
+                    <h2 id="varHandlerLabel" class="ui center aligned header">Var Handler</h2>
+                    </div>
+               </div>
+       </div>
+    </div>
    <div class="ui bottom attached tab segment" data-tab="run">
           <div id="loadtestsettingspane" class="ui segment">  
                 <div class="ui fluid accordion">
@@ -526,7 +529,7 @@
     <script src="/semantic/dist/semantic.min.js" type="application/javascript"></script>
     <script src="/js/finder.min.js" type="application/javascript"></script>
     <script src="/js/jquery.finder.js" type="application/javascript"></script>
-    <script src="/js/keymage.min.js" type="application/javascript"></script>
+    <script src="/js/mousetrap.min.js" type="application/javascript"></script>
     <script>
         $(document).ready(function(e) {
             $.ajax({url: "prxMetaData", success: function(result){
@@ -549,9 +552,17 @@
                         handle: ".title"
                     });
                 }
+                
+                $('#varHandler')
+                  .sidebar({
+                    context: $('#listView'),
+                    dimPage: false,
+                    delaySetup: false,
+                    transition: 'overlay'
+                  }).sidebar('toggle');
 
                 //Handles sidebar
-                $('.ui.sidebar')
+                $('#saveDialog')
                   .sidebar({
                     context: $('#listView'),
                     dimPage: false,
@@ -561,27 +572,25 @@
                 populateLoadTestList();
                 
             }});
-            var keymap = {};
+            
             //Method for preventing default browser behavior for command and control + S
-            $(document).keydown(function(event){
-                keymap[event.keyCode] = event.type == 'keydown';
-                if (keymap[83] && (keymap[91] || keymap[17]) ) {
-                    event.preventDefault();
-                    keymap ={};
-                    $.ajax({url: "savePrxDat", success: function(result){
+            Mousetrap.bind(['command+s', 'ctrl+s'], function(e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                } else {
+                    // internet explorer
+                    e.returnValue = false;
+                }
+                $.ajax({url: "savePrxDat", success: function(result){
                         if(result.isSaved){
                             console.log("Script saved");
                             statusUpdate("Script saved");
                         }else{
-                        $('.ui.sidebar').sidebar('show');
+                        $('#saveDialog').sidebar('show');
                         }
                         }});
-                }
             });
             
-            /*keymage('defmod-s', function() { 
-            
-            });*/
             
             
             $.fn.toggleClick = function(){
@@ -618,7 +627,7 @@
             
             //Trigger for saving script with specific name
             $("#saveAsScriptButton").click(function() {
-                $('.ui.sidebar').sidebar('show');
+                $('#saveDialog').sidebar('show');
             });
             
             //Gets a list of all class files in directory
@@ -642,7 +651,7 @@
                         console.log('Script '+saveAsName+'.prxdat saved correctly');
                         statusUpdate('Script '+saveAsName+'.prxdat saved correctly');
                     }});
-                    $('.ui.sidebar').sidebar('hide');
+                    $('#saveDialog').sidebar('hide');
                 }
             });
 
@@ -678,7 +687,7 @@
                       console.log("Script saved");
                       statusUpdate("Script saved");
                   }else{
-                      $('.ui.sidebar').sidebar('show');
+                      $('#saveDialog').sidebar('show');
                   }
               }});
             });
@@ -719,7 +728,7 @@
                     });
                 }
                 //Handles sidebar
-                $('.ui.sidebar')
+                $('#saveDialog')
                   .sidebar({
                     context: $('#listView'),
                     dimPage: false,

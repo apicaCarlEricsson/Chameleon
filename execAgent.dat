@@ -1,0 +1,9 @@
+<ExecAgent>
+id=1486838112819
+clusterMemberLocalId=-1
+description=Local Exec Agent
+agentHost=127.0.0.1
+agentPort=7993
+protocol=plain
+loadFactor=1.0
+</ExecAgent>
