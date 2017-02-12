@@ -40,6 +40,14 @@ public class Main {
 
         });
 
+        post("/createInlineScript", (req, res) -> {
+            InlineScript script = gsonPrxDat.fromJson(req.body(),InlineScript.class);
+            return worker.addInlineScript(script.title,script.execScope,script.sourceCode,script.inputVars,script.outputVars);
+        });
+
+        get("/createVar/:name/:scope", (req, res) ->
+                worker.createVariable(req.params(":name"), req.params(":name")));
+
 
         get("/openScript/:filename", (req, res) ->
             worker.reloadPrxDat(req.params(":filename")));

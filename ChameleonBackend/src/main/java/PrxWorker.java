@@ -56,7 +56,7 @@ public class PrxWorker {
         prxdat.setProjectName("-1");
     }
 
-    public void addInlineScript(String title, String execScope, String sourceCode, String[] inputVars, String[] outputVars){
+    public int addInlineScript(String title, String execScope, String sourceCode, String[] inputVars, String[] outputVars){
         ProxySnifferVarSourceInlineScript inlineScript;
 
         switch (execScope){
@@ -103,6 +103,23 @@ public class PrxWorker {
 
         inlineScript = (ProxySnifferVarSourceInlineScript) prxdat.getVarSourceHandler().addVarSource(inlineScript);
 
+        for (int i = 0 ; i < inputVars.length; i++){
+            ProxySnifferVarAssignerInlineScript proxySnifferVarAssignerInlineScript =
+                    new ProxySnifferVarAssignerInlineScript(inputVars[i],-1,inlineScript.getUniqueKey(),i);
+            ProxySnifferVar aVar = prxdat.getVarHandler().getVar(inputVars[i]);
+            proxySnifferVarAssignerInlineScript=
+                    (ProxySnifferVarAssignerInlineScript) aVar.addVarAssigner(proxySnifferVarAssignerInlineScript);
+        }
+
+        for (int i = 0 ; i < outputVars.length; i++){
+            ProxySnifferVarExtractorInlineScript proxySnifferVarExtractorInlineScript =
+                    new ProxySnifferVarExtractorInlineScript(i, outputVars[i], inlineScript.getUniqueKey());
+            ProxySnifferVar aVar = prxdat.getVarHandler().getVar(outputVars[i]);
+            proxySnifferVarExtractorInlineScript=
+                    (ProxySnifferVarExtractorInlineScript) aVar.addVarExtractor(proxySnifferVarExtractorInlineScript);
+        }
+
+        return 200;
 
 
     }
@@ -119,7 +136,7 @@ public class PrxWorker {
 
     }
 
-    public ProxySnifferVar createVariable (String scope, String varName){
+    public int createVariable (String scope, String varName){
         ProxySnifferVar newVar;
         switch (scope) {
             case "global":
@@ -149,7 +166,7 @@ public class PrxWorker {
             System.out.println("ProxySniffer VarHandler Keyword exception encountered when trying to create variable "+varName);
         }
 
-        return newVar;
+        return 200;
     }
 
     public void generateLoadTest() throws Exception {

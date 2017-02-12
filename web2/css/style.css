@@ -134,3 +134,6 @@ body > div > div.ui.bottom.attached.active.tab.segment {
   margin-left: 4em;
   margin-bottom: 0;
 }
+#varHandlerLabel {
+    margin-top: -0.25em;
+}

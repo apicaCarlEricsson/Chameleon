@@ -134,10 +134,49 @@
                     </div>
                     </div>
                 </div>
-                <div id="varHandler" class="ui right vertical sidebar menu">
+                <div id="varHandler" class="ui inline right vertical sidebar menu">
                    <div class="item">
-                    <h2 id="varHandlerLabel" class="ui center aligned header">Var Handler</h2>
+                    <div id="addVarHandler" class="ui dropdown">
+                      <i class="fitted large plus green icon"></i>
+                      <div class="menu">
+                          <div id="addNewVar" class="item">Add new variable...</div>
+                          <div id="addInline" class="item">Add new inline script...</div>
+                      </div>
                     </div>
+                    <h3 id="varHandlerLabel" class="ui right floated header">Variable Handler</h3>
+                    </div>
+                    <div class="item">
+                    <div class="ui accordion">
+                        <div class="title"><i class="dropdown icon"></i>Variables</div>
+                        <div class="content">
+                            <div id="variableContainer" class="ui segments"><p>No variables...</p></div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="item">
+                        <div class="ui accordion">
+                        <div class="title"><i class="dropdown icon"></i>Inline Scripts</div>
+                        <div class="content">
+                            <div id="inlineScriptContainer" class="ui segments"><p>No inline scripts...</p></div>
+                        </div>
+                    </div>
+                    </div>                    
+               </div>
+               <div id="inlineScriptWindow" class="ui fullscreen modal">
+                   <i class="close icon"></i>
+                   <div class="header">Inline script editor</div>
+                   <div class="content">
+                    <div class="ui form">
+                        <div class="field">
+                            <label>Script title</label>
+                            <input type="text" placeholder="Script title...">
+                        </div>
+                       <div class="field">
+                           <label>Script code</label>
+                           <textarea></textarea>
+                       </div>
+                    </div>
+                   </div>
                </div>
        </div>
     </div>
@@ -558,8 +597,9 @@
                     context: $('#listView'),
                     dimPage: false,
                     delaySetup: false,
+                    closable: false,
                     transition: 'overlay'
-                  }).sidebar('toggle');
+                  });
 
                 //Handles sidebar
                 $('#saveDialog')
@@ -570,8 +610,33 @@
                     transition: 'overlay'
                   });
                 populateLoadTestList();
+                populateVariableList();
                 
             }});
+            
+            //Triggers inline script editor
+            $('#addInline').click(function(e){
+                $("#inlineScriptWindow").modal('show');
+            });
+            
+            //Populates variable list
+            function populateVariableList(){
+                $.ajax({url: 'getAllVars', success: function(result){
+                    var htmlContent='';
+                    for(var i = 0; i < result.length; ++i){
+                        var varName=result[i].varName;
+                        console.log(varName);
+                        htmlContent += '<div class="ui center aligned segment">'+varName+'</div>';
+                    }
+                    console.log(htmlContent);
+                    $('#variableContainer').html(htmlContent);
+                }});
+            }
+            
+            //Toggling of Var Handler
+            $('#toggleVarHandler').click(function(e){
+                $('#varHandler').sidebar('toggle');
+            });
             
             //Method for preventing default browser behavior for command and control + S
             Mousetrap.bind(['command+s', 'ctrl+s'], function(e) {
@@ -651,6 +716,7 @@
                         console.log('Script '+saveAsName+'.prxdat saved correctly');
                         statusUpdate('Script '+saveAsName+'.prxdat saved correctly');
                     }});
+                    refreshHttpList();
                     $('#saveDialog').sidebar('hide');
                 }
             });
@@ -727,6 +793,8 @@
                         handle: ".title"
                     });
                 }
+                    
+                populateVariableList();
                 //Handles sidebar
                 $('#saveDialog')
                   .sidebar({
@@ -736,6 +804,8 @@
                     closable: false,
                     transition: 'overlay'
                   });
+                    
+                
 
                 }});}
 
@@ -799,6 +869,7 @@
             $('#menuViewDropdown').dropdown({action: 'select'});
             $('#menuFilterDropdown').dropdown({action: 'select'});
             $('select.dropdown').dropdown();
+            $('#addVarHandler').dropdown({action:'select'});
             
 
             //Render the metaData of the Project
