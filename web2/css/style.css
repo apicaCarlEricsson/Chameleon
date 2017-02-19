@@ -134,6 +134,12 @@ body > div > div.ui.bottom.attached.active.tab.segment {
   margin-left: 4em;
   margin-bottom: 0;
 }
-#varHandlerLabel {
-    margin-top: -0.25em;
+
+#urlNumberLabel {
+    margin-right: 1em;
+    margin-left: 1em;
+    min-width: 8em!important;
+    text-align: center!important;
+    border-right: 1px solid rgba(34,36,38,.1)!important;
+    padding-right: 1em;
 }

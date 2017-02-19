@@ -42,7 +42,12 @@ public class Main {
 
         post("/createInlineScript", (req, res) -> {
             InlineScript script = gsonPrxDat.fromJson(req.body(),InlineScript.class);
-            return worker.addInlineScript(script.title,script.execScope,script.sourceCode,script.inputVars,script.outputVars);
+            return worker.addInlineScript(script.title,script.execScope,script.sourceCode,script.index,script.inputVars,script.outputVars);
+        });
+
+        get("/getURLNumbers", (req, res) -> {
+            res.type("application/json");
+            return gsonPrxDat.toJson(worker.getURLIndex());
         });
 
         get("/createVar/:name/:scope", (req, res) ->

@@ -27,6 +27,8 @@ public class HttpResponseSerializer implements JsonSerializer<HttpResponse> {
         if (response.hasContent()){
             if (response.getContentType()!=null && response.getContentType().contains("IMAGE")){
                 return new String(Base64.getEncoder().encode(response.getContent()));
+            }else if (response.getContentType()!=null && response.getContentType().contains("BINARY")){
+               return "Binary Data";
             }else if(response.isCompressedContent()){
                 String content = new String(response.getDecompressedContent());
                 String content2 = content.replace("<","&lt;");

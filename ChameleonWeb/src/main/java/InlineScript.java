@@ -5,6 +5,7 @@ public class InlineScript {
     String title;
     String execScope;
     String sourceCode;
+    int index;
     String[] inputVars;
     String[] outputVars;
 }

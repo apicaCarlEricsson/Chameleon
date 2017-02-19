@@ -5,8 +5,8 @@
 // -----------------------------------------
 //
 // Source: Bankgirot.java
-// Date  : 11 Feb 2017 19:41:21 ECT
-// Author: Apica ZebraTester V5.4-I / automatically generated
+// Date  : 17 Feb 2017 14:36:51 ECT
+// Author: Apica ZebraTester V5.5-A / automatically generated
 //
 // Procedure Copyright by Ingenieurbuero David Fischer AG  |  A Company of the Apica Group
 // All Rights Reserved
@@ -49,6 +49,7 @@ import dfischer.utils.InnerLoopContext;
 import dfischer.utils.Lib;
 import dfischer.utils.LoadtestInlineScriptContext;
 import dfischer.utils.LoadtestInlineScriptVar;
+import dfischer.utils.LoadtestPluginClassLoader;
 import dfischer.utils.LoadtestPluginContext;
 import dfischer.utils.NextProxyConfig;
 import dfischer.utils.ParseArgs;
@@ -78,6 +79,16 @@ import dfischer.utils.XmlContentParser;
 import dfischer.utils.XmlDoctypeCommentParser;
 import dfischer.utils.ZoneTime;
 import dfischer.proxysniffer.ProxySnifferVarSourceInlineScript;
+import dfischer.utils.WebSocketPluginInterface;
+import dfischer.utils.BoundaryBasedExtractor;
+import dfischer.utils.BoundaryBasedExtractorItem;
+import dfischer.utils.RegExpBasedExtractor;
+import dfischer.utils.RegExpBasedExtractorItem;
+import dfischer.utils.XpathBasedExtractor;
+import dfischer.utils.XpathBasedExtractorItem;
+import dfischer.proxysniffer.WebSocketData;
+import dfischer.utils.HttpTestWebsocketContext;
+import dfischer.websocket.*;
 
 
 /**
@@ -85,7 +96,7 @@ import dfischer.proxysniffer.ProxySnifferVarSourceInlineScript;
  */
 public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInterface, SetThreadStepInterface, SSLSessionCacheStatisticInterface, VaryingLoadInterface, VaryingTestDurationInterface, SuspendResumeInterface, GetRealTimeUserInputFieldsInterface
 {
-	public static final String prxVersion = "V5.4-I";
+	public static final String prxVersion = "V5.5-A";
 	public static final int    prxCharEncoding = 1;                         // 1 = OS Default, 2 = ISO-8859-1, 3 = UTF-8
 	public static final String testDescription = "";
 
@@ -96,6 +107,10 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 	private static int maxParallelThreadsPerUser = MAX_PARALLEL_THREADS_PER_USER;     // configured value for max. parallel executed URLs per user
 
 	private static final boolean CONTAINS_EXTERNAL_RESOURCES = false;       // note: external resources are typically additional Java library files (*.jar files) invoked by self-developed plug-ins. Consider that Input Files and the Main Class of Plug-Ins are NOT external resources in this context because ZebraTester knows already their declarations.
+
+	// --- WebSocket Object ---
+	WebSocketData webSocketData = null;                                     // WebSocket Object that contains data of recorded WebSocket frames.
+	WebSocketPluginInterface[] webSocketPluginsForURL = null;               // all assiciated web socket plugins for specific URL.
 
 	// --- proxy configuration ---
 	private static boolean proxyEnabled = true;                             // if false: do no use a proxy server
@@ -111,8 +126,9 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 	
 	private static int plannedStartupDelay = 200;                           // startup delay between concurrent users in milliseconds, see main argument "-sdelay"
 	private static int plannedTestDuration = -1;                            // planned load test duration in seconds, 0 = unlimited, see main argument "-d"
-	private static int maxPlannedLoops = 0;  								// maximum planned loops per user, 0 = unlimited, see main argument "-maxloops"
+	private static int maxPlannedLoops = 0;  								   // maximum planned loops per user, 0 = unlimited, see main argument "-maxloops"
 	private static int plannedRequestTimeout = 0;                           // planned request timeout in seconds, see main argument "-t"
+	private static int plannedConnectTimeout = 0;                           // planned TCP/IP socket connect timeout in seconds (default = use plannedRequestTimeout), see main argument "-tconnect"
 	
 	private static String defaultTimeZone = "ECT";                          // use main argument -tz <timezone> to alter
 	private static char defaultNumberGroupingSeparator = '\'';              // use main argument -dgs a|c to alter
@@ -178,9 +194,13 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 	private DynamicProtobufContentParser protobufContentParser = null;  // re-used, scratch, used to extract vars from http response
 	private TextLineTokenExtractor textLineTokenExtractor = null; // re-used, scratch, used to extract vars from http response
 	private ContentTokenExtractor contentTokenExtractor = null;   // re-used, scratch, used to extract vars from http response
+	private BoundaryBasedExtractor boundaryBasedExtractor = null;   // re-used, scratch, used to extract vars from http response
+	private RegExpBasedExtractor regExpBasedExtractor = null;   // re-used, scratch, used to extract vars from http response
+	private XpathBasedExtractor xpathBasedExtractor = null;   // re-used, scratch, used to extract vars from http response
 	
-	private volatile UserTransactionRuntimeHandler transactionHandler = new UserTransactionRuntimeHandler();		// re-used, support to manage user-defined transactions
+	private static String testvar = null;                                        // var declaration from web admin var handler: scope = global
 
+	private volatile UserTransactionRuntimeHandler transactionHandler = new UserTransactionRuntimeHandler();		// re-used, support to manage user-defined transactions
 
 	/**
 	 * constructor: called from load test plug-ins (scope = global).
@@ -242,6 +262,8 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		// create socket pool per loop
 		sslSessionCache = SSLInit.getNewSslSessionCache(sslSessionCacheTimeout);		// reset the SSL session cache to get new SSL session IDs for this loop
 		socketPool = new HttpSocketPool(this, sslProtocolVersion, sslSessionCache, sslStatistic, sslcmode);
+		if (plannedConnectTimeout > 0)
+			socketPool.setConnectTimeout(plannedConnectTimeout);
 		if (sslHandshakeRandomGeneratorType != -1)
 			socketPool.setSslHandshakeRandomGeneratorType(sslHandshakeRandomGeneratorType);
 		socketPool.setSupportEllipticCurves(sslECC);
@@ -2252,6 +2274,8 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 			System.out.println("-d <seconds>             ->> required argument: planned test duration in seconds (default: 30, 0 = unlimited)");
 			System.out.println("-t <seconds>             ->> required argument: request timeout per url in seconds");
 			System.out.println();
+			System.out.println("-tconnect <seconds>      ->> TCP/IP socket connect timeout in seconds (default: use value of -t <seconds>)");
+			System.out.println();
 			System.out.println("-sdelay <milliseconds>   ->> startup delay time between concurrent users in milliseconds (default: 200)");
 			System.out.println("-mtpu <number>           ->> maximum number of parallel threads per user (default: " + MAX_PARALLEL_THREADS_PER_USER + ")");
 			System.out.println("-maxloops <number>       ->> maximum number of loops per user (default: 0 = unlimited)");
@@ -2277,6 +2301,7 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 			System.out.println("-ecc                     ->> enable support of elliptic curve cryptography (ECC)");
 			System.out.println("-nosni                   ->> disable support of server name indication (SNI)");
 			System.out.println("-snicritical             ->> set the TLS SNI extension as critical (default: non-critical)");
+			System.out.println("-iaikLast                ->> adds the IAIK security provider at the last position (instead of default: IAIK at first position)");
 			System.out.println();
 			System.out.println("-dnssrv <IP-1>[,IP-N])   ->> use specific DNS server(s) to resolve DNS host names (default: use OS to resolve host names)");
 			System.out.println("-dnshosts <filename>     ->> use specific DNS hosts file (default: use OS to resolve host names)");
@@ -2286,6 +2311,8 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 			System.out.println("-dnsperloop              ->> perform new DNS resolves for each executed loop. All resolves are stable within the same loop (no consideration of DNS TTL within a loop)");
 			System.out.println("-dnsstatistic            ->> collect statistical data about DNS resolutions. Note: use this option only if not any other, more specific DNS option is enabled");
 			System.out.println("-dnsdebug                ->> debug DNS resolves and the DNS cache");
+			System.out.println("-enableIPv6 <networkinterface-name>  ->> enable only IPv6 support for recording, also can provide the IPv6 network interface of the load generator");
+			System.out.println("-enableIPv6v4 <networkinterface-name> ->> enable both IPv6 and IPv4 (first will try with IPv6 ,if fails will try with IPv4 support for recording),also can provide the IPv6 network interface of the load generator");
 			System.out.println();
 			System.out.println("-dfl                     ->> debug execution steps of all failed loops to standard output");
 			System.out.println("-dl                      ->> debug execution steps of all loops to standard output");
@@ -2331,7 +2358,7 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		sslECC = (ParseArgs.hasOption(args, "-ecc"));       // enable ssl ecc ?
 		
 		// initialize ssl/https support
-		SSLInit.execute();
+		SSLInit.execute(!ParseArgs.hasOption(args, "-iaikLast"), true);
 		if (sslECC)
 			SSLInit.enableECC();
 		
@@ -2477,99 +2504,6 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		if (newUplinkBandwidth != null)
 			uplinkBandwidth = newUplinkBandwidth.intValue();
 		
-		// use test-specific DNS hosts file (optional) ?
-		String dnsHostsFile = ParseArgs.getIgnoreCaseString(args, "-dnshosts");
-		if (dnsHostsFile != null)
-		{
-			try
-			{
-				dnsCache = new DNSCache(dnsHostsFile);
-			}
-			catch (IOException ie)
-			{
-				System.out.println("*** ERROR: unable to read DNS hosts file " + dnsHostsFile + " ***");
-				System.out.println("*** Hint: you have to ZIP " + dnsHostsFile + " together with the compiled class of the load test program ***");
-				ie.printStackTrace();
-				System.exit(-1);
-			}
-		}
-		
-		// use test-specific DNS translation table (optional) ?
-		String dnsTranslationTableFile = ParseArgs.getIgnoreCaseString(args, "-dnstranslation");
-		if (dnsTranslationTableFile != null)
-		{
-			try
-			{
-				DNSTranslationTable dnsTranslationTable = new DNSTranslationTable(new File(dnsTranslationTableFile));
-				if (dnsCache == null)
-					dnsCache = new DNSCache();
-				dnsCache.setDNSTranslationTable(dnsTranslationTable);
-			}
-			catch (IOException ie)
-			{
-				System.out.println("*** ERROR: unable to read DNS translation table file " + dnsTranslationTableFile + " ***");
-				System.out.println("*** Hint: you have to ZIP " + dnsTranslationTableFile + " together with the compiled class of the load test program ***");
-				ie.printStackTrace();
-				System.exit(-1);
-			}
-		}
-		
-		// use test-specific DNS servers (optional) ?
-		String dnsSrvStr = ParseArgs.getIgnoreCaseString(args, "-dnssrv");
-		if (dnsSrvStr != null)
-		{
-			ArrayList<String> dnsSrvList = new ArrayList<String>();
-			StringTokenizer dnsTok = new StringTokenizer(dnsSrvStr, ",;");
-			while (dnsTok.hasMoreTokens())
-				dnsSrvList.add(dnsTok.nextToken());
-			if (dnsCache == null)
-				dnsCache = new DNSCache(dnsSrvList);
-			else
-				dnsCache.setDnsServers(dnsSrvList);
-		}
-		
-		// enable DNS TTL ?
-		if (ParseArgs.hasOption(args, "-dnsenattl"))
-		{
-			if (dnsCache == null)
-				dnsCache = new DNSCache();
-			dnsCache.enableTTL();
-		}
-		
-		// set fixed DNS TTL ?
-		Integer dnsFixTTL = ParseArgs.getInteger(args, "-dnsfixttl");
-		{
-			if (dnsFixTTL != null)
-			{
-				if (dnsCache == null)
-					dnsCache = new DNSCache();
-				dnsCache.setFixedTTL(dnsFixTTL.intValue());
-			}
-		}
-		
-		// enable DNS resolves per loop ?
-		if (ParseArgs.hasOption(args, "-dnsperloop"))
-		{
-			if (dnsCache == null)
-				dnsCache = new DNSCache();
-			dnsPerLoop = true;
-		}
-		
-		// enable DNS statistic ?   // note: use this option only if not any other, more specific DNS option is enabled.
-		if (ParseArgs.hasOption(args, "-dnsstatistic"))
-		{
-			if (dnsCache == null)
-				dnsCache = new DNSCache();
-		}
-		
-		// debug DNS resolver ?
-		if (ParseArgs.hasOption(args, "-dnsdebug"))
-		{
-			if (dnsCache == null)
-				dnsCache = new DNSCache();
-			dnsCache.setDebugToStdout(true);
-		}
-		
 		// get statistic sampling interval
 		int samplingInterval = 15;  // statistic sampling interval in seconds
 		Integer newSamplingInterval = ParseArgs.getInteger(args, "-sampling");
@@ -2642,6 +2576,11 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		else
 			plannedRequestTimeout = i.intValue();
 		
+		// parse optional -tconnect argument (TCP/IP socket connect timeout in seconds)
+		i = ParseArgs.getInteger(args, "-tconnect");
+		if (i != null)
+			plannedConnectTimeout = i.intValue();
+		
 		String genericFileName = PerformanceData.proposeFileName("Bankgirot", concurrentUsers);
 		
 		// auto-configure binary result file
@@ -2665,6 +2604,8 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		else
 			System.out.println("" + plannedTestDuration + " seconds");
 		System.out.println("# http request timeout = " + plannedRequestTimeout + " seconds");
+		if (plannedConnectTimeout != 0)
+			System.out.println("# tcp/ip socket connect timeout = " + plannedConnectTimeout + " seconds");
 		System.out.println("# startup delay = " + plannedStartupDelay + " milliseconds");
 		System.out.println("# statistic sampling interval = " + samplingInterval + " seconds");
 		System.out.println("# additional sampling rate per web page call = " + percentilePageSampling + " %");
@@ -2685,12 +2626,6 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 			System.out.println("# ssl session cache timeout = " + sslSessionCacheTimeout + " seconds");
 		else
 			System.out.println("# ssl session cache disabled");
-		if (dnsCache != null)
-		{
-			System.out.println("# OS-independent DNS access enabled. " + dnsCache.getConfigInfoText());
-			if (dnsPerLoop)
-				System.out.println("# DNS option -dnsperloop enabled");
-		}
 		if (resultFile != null)
 			System.out.println("# result file = " + resultFile);
 		else
@@ -2709,16 +2644,11 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 			System.out.println("# debug keep-alive (socket pool)");
 		if (debugSsl)
 			System.out.println("# debug ssl (https)");
-		if (debugLoops || debugFailedLoops)
-		{
-		}
-		System.out.println();
 		
 		
-		
-		// --------------------------
-		// *** start of load test ***
-		// --------------------------
+		// ----------------------------
+		// *** initialize load test ***
+		// ----------------------------
 		
 		
 		// initialize performance data
@@ -2736,14 +2666,6 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		performanceData.setMaxErrorSnapshots(maxErrorSnapshots);		// 0 = unlimited
 		if (maxErrorSnapshotMemory >= 0)
 			performanceData.setMaxErrorSnapshotsMemory(maxErrorSnapshotMemory * 1048576l);		// value in bytes
-		
-		if (dnsCache != null)
-		{
-			performanceData.addDNSCacheStatistic(dnsCache.getCacheStatistic());
-			performanceData.addTestDescription("*** Warning: OS-independent DNS access enabled. " + dnsCache.getConfigInfoText() + " ***");
-			if (dnsPerLoop)
-				performanceData.addTestDescription("*** Warning: DNS option -dnsperloop enabled ***");
-		}
 		
 		if (sslECC)
 			performanceData.addTestDescription("*** Warning: SSL/TLS option -ecc enabled ***");
@@ -2802,12 +2724,161 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		// ... but init first remote interface ...
 		initRemote(args);
 		
+		// ... and init plug-in class loader ...
+		try
+		{
+			if (getPluginClassLoader() == null)
+				setPluginClassLoader(new LoadtestPluginClassLoader(getSymmetricEncryptContext(), getEncryptedClasspathList()));
+		}
+		catch (Throwable pluginClassLoaderThrowable)
+		{
+			System.out.println("*** ERROR: Unable to load encrypted files ***");
+			pluginClassLoaderThrowable.printStackTrace();
+			System.exit(-1);
+		}
+		
 		// ... and check multihomed option ...
 		initMultihomed(args);
 		
 		// ... and add dynaTrace session ID to load test result - if available ...
 		initDynaTrace();
 		
+		
+		// use test-specific DNS hosts file (optional) ?
+		String dnsHostsFile = ParseArgs.getIgnoreCaseString(args, "-dnshosts");
+		if (dnsHostsFile != null)
+		{
+			try
+			{
+				dnsCache = new DNSCache(getSymmetricEncryptContext(), dnsHostsFile);
+			}
+			catch (IOException ie)
+			{
+				System.out.println("*** ERROR: unable to read DNS hosts file " + dnsHostsFile + " ***");
+				System.out.println("*** Hint: you have to ZIP " + dnsHostsFile + " together with the compiled class of the load test program ***");
+				ie.printStackTrace();
+				System.exit(-1);
+			}
+		}
+		
+		// use test-specific DNS translation table (optional) ?
+		String dnsTranslationTableFile = ParseArgs.getIgnoreCaseString(args, "-dnstranslation");
+		if (dnsTranslationTableFile != null)
+		{
+			try
+			{
+				DNSTranslationTable dnsTranslationTable = new DNSTranslationTable(getSymmetricEncryptContext(), new File(dnsTranslationTableFile));
+				if (dnsCache == null)
+					dnsCache = new DNSCache();
+				dnsCache.setDNSTranslationTable(dnsTranslationTable);
+			}
+			catch (IOException ie)
+			{
+				System.out.println("*** ERROR: unable to read DNS translation table file " + dnsTranslationTableFile + " ***");
+				System.out.println("*** Hint: you have to ZIP " + dnsTranslationTableFile + " together with the compiled class of the load test program ***");
+				ie.printStackTrace();
+				System.exit(-1);
+			}
+		}
+		
+		// use test-specific DNS servers (optional) ?
+		String dnsSrvStr = ParseArgs.getIgnoreCaseString(args, "-dnssrv");
+		if (dnsSrvStr != null)
+		{
+			ArrayList<String> dnsSrvList = new ArrayList<String>();
+			StringTokenizer dnsTok = new StringTokenizer(dnsSrvStr, ",;");
+			while (dnsTok.hasMoreTokens())
+				dnsSrvList.add(dnsTok.nextToken());
+			if (dnsCache == null)
+				dnsCache = new DNSCache(dnsSrvList);
+			else
+				dnsCache.setDnsServers(dnsSrvList);
+		}
+		
+		// enable DNS TTL ?
+		if (ParseArgs.hasOption(args, "-dnsenattl"))
+		{
+			if (dnsCache == null)
+				dnsCache = new DNSCache();
+			dnsCache.enableTTL();
+		}
+		
+		// set fixed DNS TTL ?
+		Integer dnsFixTTL = ParseArgs.getInteger(args, "-dnsfixttl");
+		{
+			if (dnsFixTTL != null)
+			{
+				if (dnsCache == null)
+					dnsCache = new DNSCache();
+				dnsCache.setFixedTTL(dnsFixTTL.intValue());
+			}
+		}
+		
+		// enable DNS resolves per loop ?
+		if (ParseArgs.hasOption(args, "-dnsperloop"))
+		{
+			if (dnsCache == null)
+				dnsCache = new DNSCache();
+			dnsPerLoop = true;
+		}
+		
+		// enable DNS statistic ?   // note: use this option only if not any other, more specific DNS option is enabled.
+		if (ParseArgs.hasOption(args, "-dnsstatistic"))
+		{
+			if (dnsCache == null)
+				dnsCache = new DNSCache();
+		}
+		
+		// debug DNS resolver ?
+		if (ParseArgs.hasOption(args, "-dnsdebug"))
+		{
+			if (dnsCache == null)
+				dnsCache = new DNSCache();
+			dnsCache.setDebugToStdout(true);
+		}
+		
+		// enable IPv6 
+		if (ParseArgs.hasIgnoreCaseOption(args, "-enableIPv6"))
+		{
+			if (dnsCache == null)
+				dnsCache = new DNSCache();
+			dnsCache.setEnableIPv6(true);
+			String networkInterfaceName = ParseArgs.getString(args, "-enableIPv6");
+			if(null != networkInterfaceName && !networkInterfaceName.startsWith("-"))
+				dnsCache.setNetworkInterfaceName(networkInterfaceName);
+		}
+		
+		// enable IPv6 and V4 
+		if (ParseArgs.hasIgnoreCaseOption(args, "-enableIPv6v4"))
+		{
+			if (dnsCache == null)
+				dnsCache = new DNSCache();
+			dnsCache.setEnableIPv6v4(true);
+			String networkInterfaceName = ParseArgs.getString(args, "-enableIPv6v4");
+			if(null != networkInterfaceName && !networkInterfaceName.startsWith("-"))
+				dnsCache.setNetworkInterfaceName(networkInterfaceName);
+		}
+		
+		if (dnsCache != null)
+		{
+			// update performance data with DNS settings
+			performanceData.addDNSCacheStatistic(dnsCache.getCacheStatistic());
+			performanceData.addTestDescription("*** Warning: OS-independent DNS access enabled. " + dnsCache.getConfigInfoText() + " ***");
+			if (dnsPerLoop)
+				performanceData.addTestDescription("*** Warning: DNS option -dnsperloop enabled ***");
+			
+			// log DNS settings
+			System.out.println("# OS-independent DNS access enabled. " + dnsCache.getConfigInfoText());
+			if (dnsPerLoop)
+				System.out.println("# DNS option -dnsperloop enabled");
+		}
+		
+		// log the initial value of all global vars
+		if (debugLoops || debugFailedLoops)
+		{
+			System.out.println("global var <<< testvar = " + testvar);
+			System.out.println();
+		}
 		
 		// calculate sampling offset and virtual user startup offset for cluster jobs (time shift per cluster member)
 		int samplingTimeshift = 0;	// value in seconds
@@ -2829,13 +2900,64 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		}
 		
 		
-		// start virtual users as threads
-		// ------------------------------
+		// update performance data
+		// -----------------------
 		testDurationStart = System.currentTimeMillis();
 		performanceData.setStartDate();
 		performanceData.addSnapshot(getCpuUsagePercent());
 		performanceData.setSnapshotsTimeshift(samplingTimeshift);
 		performanceData.setEndDate();
+		
+		// initialize global context for plug-ins  
+		LoadtestPluginContext globalPluginContext = new LoadtestPluginContext(prxVersion, prxCharEncoding, new Bankgirot());
+		
+		// execute inline script "testInline" at start of test
+		LoadtestInlineScriptContext inlineScriptContext_1486930568480 = new LoadtestInlineScriptContext("testInline", ProxySnifferVarSourceInlineScript.EXEC_SCOPE_GLOBAL_START, "", getSymmetricEncryptContext(), performanceData, LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS, -1);
+		InlineScriptExecutor inlineScriptExecutor_1486930568480 = new InlineScriptExecutor(getInlineScriptCode_1486930568480(), inlineScriptContext_1486930568480);
+		Throwable inlineScriptThrowable_1486930568480 = null;
+		if (debugLoops)
+			System.out.println("Executing inline script \"" + inlineScriptContext_1486930568480.getScriptTitle() + "\"");
+		try
+		{
+			LoadtestInlineScriptVar inputVar1 = new LoadtestInlineScriptVar("testvar", Lib.nullToBlank(testvar), 3);		// note: parameter no. 3 is the scope of the var
+			inlineScriptContext_1486930568480.addInputVar(inputVar1);
+			inlineScriptExecutor_1486930568480.execute();		// execute inline script
+		}
+		catch (Throwable th_1486930568480)
+		{
+			inlineScriptThrowable_1486930568480 = th_1486930568480;
+		}
+		if (debugLoops)
+		{
+			for (String stdoutLine : inlineScriptContext_1486930568480.getOutputStreamData())
+				System.out.println(inlineScriptContext_1486930568480.getScriptTitle() + ": " + stdoutLine);
+		}
+		for (String stderrLine : inlineScriptContext_1486930568480.getErrorStreamData())
+			System.err.println(inlineScriptContext_1486930568480.getScriptTitle() + ": " + stderrLine);
+		if ((!inlineScriptExecutor_1486930568480.wasSuccessFulExecution()) || (inlineScriptThrowable_1486930568480 != null))
+		{
+			if (inlineScriptContext_1486930568480.isScriptAbort())
+			{
+				System.out.println("*** TEST ABORTED BY INLINE SCRIPT \"" + inlineScriptContext_1486930568480.getScriptTitle() + "\" ***");
+				System.out.println("Abort Message = " + inlineScriptContext_1486930568480.getScriptAbortMessage());
+				System.exit(1);
+			}
+			System.out.println("*** ERROR: Execution of inline script \"" + inlineScriptContext_1486930568480.getScriptTitle() + "\" failed ***");
+			if (inlineScriptThrowable_1486930568480 != null)
+				inlineScriptThrowable_1486930568480.printStackTrace(System.err);
+			System.exit(-2);
+		}
+		
+		
+		
+		
+		// --------------------------
+		// *** start of load test ***
+		// ---------------------------
+		
+		
+		// start virtual users as threads
+		// ------------------------------
 		for (int x = 0; x < concurrentUsers; x++)
 		{
 			// start load test thread
@@ -2971,7 +3093,7 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 					if (!isRemote())
 						performanceData.dump(false);
 					if (resultFile != null)
-						try { performanceData.writeObjectToFile(resultFile); } catch (IOException ie) { ie.printStackTrace(); }
+						try { performanceData.writeObjectToFile(getSymmetricEncryptContext(), resultFile); } catch (IOException ie) { ie.printStackTrace(); }
 					
 					System.out.println();
 					System.out.println(abort);
@@ -3018,7 +3140,7 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		// save test result
 		performanceData.dump(true);
 		if (resultFile != null)
-			try { performanceData.writeObjectToFile(resultFile); } catch (IOException ie) { ie.printStackTrace(); }
+			try { performanceData.writeObjectToFile(getSymmetricEncryptContext(), resultFile); } catch (IOException ie) { ie.printStackTrace(); }
 		
 		// all done
 		System.out.flush();
@@ -3115,6 +3237,13 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 
 
 
+	
+	// source code of inline script "testInline"
+	public static String getInlineScriptCode_1486930568480()
+	{
+		return "print(success)";
+	}
+	
 
 }	// end of class
 

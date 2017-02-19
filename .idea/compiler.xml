@@ -10,9 +10,9 @@
         <module name="ChameleonWeb" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="Chameleon" target="1.8" />
-      <module name="ChameleonBackend" target="1.7" />
+      <module name="ChameleonBackend" target="1.8" />
       <module name="ChameleonWeb" target="1.8" />
     </bytecodeTargetLevel>
   </component>

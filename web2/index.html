@@ -45,6 +45,19 @@
                         <div id="generateLoadTest" class="item">Generate Load Test</div>
                     </div>
                 </div>
+                <div id="menuEditDropdown" class="ui dropdown link item">
+                    <i class="wizard icon"></i>
+                    <span class="text">Edit</span>
+                    <div class="menu">
+                        <div class="header">Page Breaks and URLs</div>
+                        <div id="addNewPageBreak" class="item"><span class="text">Add Page Break...</span></div>
+                        <div id="addNewURL" class="item"><span class="text">Add URL...</span></div>
+                        <div class="divider"></div>
+                        <div class="header">Variable Handling</div>
+                        <div id="addNewVar" class="item">Add variable...</div>
+                        <div id="addInline" class="item">Add inline script...</div>
+                    </div>
+                </div>
                 <div id="menuViewDropdown" class="ui dropdown link item">
                     <i class="book icon"></i>
                     <span class="text">View</span>
@@ -135,16 +148,7 @@
                     </div>
                 </div>
                 <div id="varHandler" class="ui inline right vertical sidebar menu">
-                   <div class="item">
-                    <div id="addVarHandler" class="ui dropdown">
-                      <i class="fitted large plus green icon"></i>
-                      <div class="menu">
-                          <div id="addNewVar" class="item">Add new variable...</div>
-                          <div id="addInline" class="item">Add new inline script...</div>
-                      </div>
-                    </div>
-                    <h3 id="varHandlerLabel" class="ui right floated header">Variable Handler</h3>
-                    </div>
+                    <div class="item"><h3 id="varHandlerLabel" class="ui center aligned header">Variable Handler</h3></div>
                     <div class="item">
                     <div class="ui accordion">
                         <div class="title"><i class="dropdown icon"></i>Variables</div>
@@ -169,11 +173,103 @@
                     <div class="ui form">
                         <div class="field">
                             <label>Script title</label>
-                            <input type="text" placeholder="Script title...">
+                            <input id="inlineScriptTitle" type="text" placeholder="Script title...">
+                        </div>
+                            <div class="inline fields">
+                                <label for="inlinescope">Script scope</label>
+                                <div class="field">
+                                  <div class="ui radio checkbox">
+                                    <input value="1" type="radio" name="inlinescope" checked="" tabindex="0" class="hidden">
+                                    <label>Loadtest</label>
+                                  </div>
+                                </div>
+                                <div class="field">
+                                  <div class="ui radio checkbox">
+                                    <input value="2" type="radio" name="inlinescope" tabindex="0" class="hidden">
+                                    <label>User</label>
+                                  </div>
+                                </div>
+                                <div class="field">
+                                  <div class="ui radio checkbox">
+                                    <input value="3" type="radio" name="inlinescope" tabindex="0" class="hidden">
+                                    <label>Loop</label>
+                                  </div>
+                                </div>
+                                <div class="field">
+                                  <div class="ui radio checkbox">
+                                    <input value="4" type="radio" name="inlinescope" tabindex="0" class="hidden">
+                                    <label>All URLs</label>
+                                  </div>
+                                </div>
+                                <div class="field">
+                                  <div class="ui radio checkbox">
+                                    <input value="5" type="radio" name="inlinescope" tabindex="0" class="hidden">
+                                    <label>URL</label>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="two fields">
+                                 <div class="field">
+                                      <label>Execution</label>
+                                      <select id="inlineScriptExecution" class="ui fluid dropdown">
+                                          <option value="">When to execute</option>
+                                            <option value="0">Before</option>
+                                            <option value="1">After</option>
+                                      </select>
+                                  </div>
+                                  <div class="field">
+                                      <label>Attach to...</label>
+                                      <select id="attachedInlineURL" class="ui fluid dropdown">
+                                      </select>
+                                  </div>
+                              </div>
+                       <div class="two fields">
+                           <div class="field">
+                               <label>Input Variables</label>
+                               <select id="inlineInputVars" multiple="" class="ui fluid dropdown"></select>
+                           </div>
+                           <div class="field">
+                               <label>Output Variables</label>
+                               <select id="inlineOutputVars" multiple="" class="ui fluid dropdown"></select>
+                           </div>
+                       </div>
+                       <div class="field">
+                            <label>Script code</label>
+                            <textarea id="inlineScriptCode"></textarea>
+                        </div>
+                       <div class="actions">
+                           <div class="ui button">Test script</div>
+                           <div class="ui button">Load script</div>
+                           <div class="ui button">Save script</div>
+                           <div id="submitInlineScript" class="ui green button">Add to session</div>
+                       </div>
+                    </div>
+                   </div>
+               </div>
+               <div id="addVarWindow" class="ui modal">
+                   <i class="close icon"></i>
+                   <div class="header">Add Variable</div>
+                   <div class="content">
+                    <div class="ui form">
+                        <div class="field">
+                            <label>Variable name</label>
+                            <input type="text" placeholder="Example: mySampleVar">
+                        </div>
+                        <div class="field">
+                            <label>Variable scope</label>
+                            <select class="ui dropdown">
+                              <option value="">Scope</option>
+                              <option value="global">Global</option>
+                              <option value="user">User</option>
+                              <option value="loop">Loop</option>
+                            </select>
                         </div>
                        <div class="field">
-                           <label>Script code</label>
-                           <textarea></textarea>
+                            <label>Default Value</label>
+                            <input type="text" placeholder="Optional...">
+                        </div>
+                       <div class="actions">
+                           <div class="ui green button">Add Variable</div>
                        </div>
                     </div>
                    </div>
@@ -578,6 +674,7 @@
                     $('.ui.accordion').accordion({
                         duration: 500
                     });
+                    $('.ui.checkbox').checkbox();
                     var $toggle  = $('.ui.toggle.button');
                     $toggle.state({text: {inactive : 'S',active   : 'P'}});
                     $("div[id^='urlSegments']").sortable({
@@ -614,9 +711,17 @@
                 
             }});
             
+            
             //Triggers inline script editor
             $('#addInline').click(function(e){
+                displayInlineVariables();
+                fetchURLNumbers();
                 $("#inlineScriptWindow").modal('show');
+            });
+            
+            //Triggers var creator
+            $('#addNewVar').click(function(e){
+                $("#addVarWindow").modal('show');
             });
             
             //Populates variable list
@@ -625,10 +730,8 @@
                     var htmlContent='';
                     for(var i = 0; i < result.length; ++i){
                         var varName=result[i].varName;
-                        console.log(varName);
                         htmlContent += '<div class="ui center aligned segment">'+varName+'</div>';
                     }
-                    console.log(htmlContent);
                     $('#variableContainer').html(htmlContent);
                 }});
             }
@@ -636,6 +739,68 @@
             //Toggling of Var Handler
             $('#toggleVarHandler').click(function(e){
                 $('#varHandler').sidebar('toggle');
+            });
+            
+            //Submit an inline script
+            $("#submitInlineScript").click(function(e){
+                var title = $('#inlineScriptTitle').val();
+                var inputVars = $('#inlineInputVars').val();
+                var outputVars = $('#inlineOutputVars').val();
+                var executionTime = $('#inlineScriptExecution').val();
+                var sourceCode = window.btoa($('#inlineScriptCode').val());
+                var index = $('#attachedInlineURL').val();
+                var scope = $('input[name=inlinescope]:checked').val();
+                var scopeFinal='';
+                var executionFinal='';
+                
+                switch(scope){
+                    case 1:
+                        scopeFinal='global';
+                        index=-1;
+                        break;
+                    case 2:
+                        scopeFinal='user';
+                        index=-1;
+                        break;
+                    case 3:
+                        scopeFinal='loop';
+                        index=-1;
+                        break;
+                    case 4:
+                        scopeFinal='all_urls';
+                        index=-1;
+                        break;
+                    case 5:
+                        scopeFinal='url';
+                        break;
+                    default:
+                        scopeFinal='global';
+                        index=-1;
+                        break;
+                }
+                switch(executionTime){
+                    case 0:
+                        executionFinal='start';
+                        break;
+                    case 1:
+                        executionFinal='end';
+                        break;
+                    default:
+                        executionFinal='end';
+                        break;
+                }
+                var data = {"title":title,"execScope":scopeFinal+'_'+executionFinal,"sourceCode":sourceCode, "index":index,"inputVars":inputVars,"outputVars":outputVars}
+                console.log(data);
+                $.ajax({
+                    type:"POST",
+                    url:"createInlineScript",
+                    data:JSON.stringify(data),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success:function(result){
+                        $("#inlineScriptWindow").modal('close');
+                    }
+                });
             });
             
             //Method for preventing default browser behavior for command and control + S
@@ -656,7 +821,31 @@
                         }});
             });
             
+            //Fetch variables for inline scripts
+            function displayInlineVariables(){
+                $.ajax({url: 'getAllVars', success: function(result){
+                    var htmlContent='';
+                    for(var i = 0; i < result.length; ++i){
+                        var varName=result[i].varName;
+                        htmlContent += '<option value="'+varName+'">'+varName+'</option>';
+                    }
+                    $('#inlineInputVars').html(htmlContent);
+                    $('#inlineOutputVars').html(htmlContent);
+                }});
+            }
             
+            //Fetch the URL numbers
+            function fetchURLNumbers(){
+                $.ajax({url:"getURLNumbers", success: function(result){
+                    var content='<option value="">URL Number</option>';
+                    
+                    for (var i = 0 ; i < result.length; i++){
+                        content+='<option value="'+result[i]+'">'+result[i]+'</option>';
+                    }
+                    $("#attachedInlineURL").html(content);
+                    
+                }});
+            }
             
             $.fn.toggleClick = function(){
                 var methods = arguments, // store the passed arguments for future reference
@@ -866,6 +1055,7 @@
 
             $('.right.menu .item').tab();
             $('#menuFileDropdown').dropdown({action: 'select'});
+            $('#menuEditDropdown').dropdown({action: 'select'});
             $('#menuViewDropdown').dropdown({action: 'select'});
             $('#menuFilterDropdown').dropdown({action: 'select'});
             $('select.dropdown').dropdown();
@@ -959,6 +1149,7 @@
                             '<div class="item" id="urlSizeText"><b>'+calculatePageSize(proxyRecord.httpResponse.headerContentLength)+'</b></div>'+
                             '<div class="accordion" urlIDAccordion="'+i+'">'+
                             '<div class="title">'+
+                            '<b id="urlNumberLabel">'+i+'</b>'+
                             pickContentLabel(proxyRecord.httpResponse.headerContentType)+
                             pickStatusCode(proxyRecord.httpResponse.headerServerStatus, proxyRecord.httpResponse.headerServerStatusText)+
                             ' '+
@@ -1057,7 +1248,7 @@
                 for (var i = 1; i<urlCall.length;++i){
                     if(typeof urlCall[i] !== 'undefined'){
                         var headerSplit = urlCall[i].split(": ");
-                        output += '<div id="headerSegment" class="ui attached segment">'+
+                        output += '<div id="headerSegment" headerid='+i+' class="ui attached segment">'+
                             '<b>'+headerSplit[0]+': </b>'+headerSplit[1]+'</div>';
                     }
 
@@ -1073,7 +1264,7 @@
                 for (var i = 0; i<urlCall.length;++i){
                     if(typeof urlCall[i] !== 'undefined'){
                         var headerSplit = urlCall[i].split(": ");
-                        output += '<div id="headerSegment" class="ui attached segment">'+
+                        output += '<div id="headerSegment" headerid='+i+' class="ui attached segment">'+
                             '<b>'+headerSplit[0]+': </b>'+headerSplit[1]+'</div>';
                     }
 

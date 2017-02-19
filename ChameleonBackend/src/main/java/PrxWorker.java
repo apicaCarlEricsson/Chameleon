@@ -1,5 +1,6 @@
 import dfischer.generator.CreateLoadtestProgram;
 import dfischer.proxysniffer.*;
+import dfischer.utils.Base64Decoder;
 import dfischer.utils.LoadtestInlineScriptContext;
 import dfischer.utils.NextProxyConfig;
 import dfischer.webadmininterface.DisplayListCache;
@@ -47,7 +48,17 @@ public class PrxWorker {
 
         prxdat.setProjectName(fileName);
 
+    }
 
+    public List<Integer> getURLIndex(){
+        List<Integer> myList = new ArrayList<>();
+        for (int i = 0 ; i < prxdat.getProxyData().size(); i++){
+            ProxyDataRecord record = (ProxyDataRecord) prxdat.getProxyData().get(i);
+            if (!record.isDataTypePageBreak()){
+                myList.add(i);
+            }
+        }
+        return myList;
     }
 
     public void clearPrxDat (){
@@ -56,7 +67,7 @@ public class PrxWorker {
         prxdat.setProjectName("-1");
     }
 
-    public int addInlineScript(String title, String execScope, String sourceCode, String[] inputVars, String[] outputVars){
+    public int addInlineScript(String title, String execScope, String sourceCode,int index, String[] inputVars, String[] outputVars){
         ProxySnifferVarSourceInlineScript inlineScript;
 
         switch (execScope){
@@ -80,6 +91,14 @@ public class PrxWorker {
                 inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_USER_END,
                         LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
                 break;
+            case "url_end":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_URL_END,index,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
+            case "url_start":
+                inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_URL_START,index,
+                        LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
+                break;
             case "loop_start":
                 inlineScript = new ProxySnifferVarSourceInlineScript(ProxySnifferVarSourceInlineScript.EXEC_SCOPE_LOOP_START,
                         LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS);
@@ -99,13 +118,13 @@ public class PrxWorker {
         }
 
         inlineScript.setInlineScriptTitle(title);
-        inlineScript.setInlineScriptCode(sourceCode);
+        inlineScript.setInlineScriptCode(new String(java.util.Base64.getDecoder().decode(sourceCode)));
 
         inlineScript = (ProxySnifferVarSourceInlineScript) prxdat.getVarSourceHandler().addVarSource(inlineScript);
 
         for (int i = 0 ; i < inputVars.length; i++){
             ProxySnifferVarAssignerInlineScript proxySnifferVarAssignerInlineScript =
-                    new ProxySnifferVarAssignerInlineScript(inputVars[i],-1,inlineScript.getUniqueKey(),i);
+                    new ProxySnifferVarAssignerInlineScript(inputVars[i],index,inlineScript.getUniqueKey(),i);
             ProxySnifferVar aVar = prxdat.getVarHandler().getVar(inputVars[i]);
             proxySnifferVarAssignerInlineScript=
                     (ProxySnifferVarAssignerInlineScript) aVar.addVarAssigner(proxySnifferVarAssignerInlineScript);
@@ -204,7 +223,23 @@ public class PrxWorker {
 
         //compiler.run(null, null, null, "-classpath "+System.getProperty("user.dir")+"/iaik_eccelerate.jar;"+System.getProperty("user.dir")+"/iaik_eccelerate_ssl.jar;"+System.getProperty("user.dir")+"/iaik_jce_full.jar;"+System.getProperty("user.dir")+"/iaik_ssl.jar;"+System.getProperty("user.dir")+"/iaikPkcs11Provider.jar;"+System.getProperty("user.dir")+"/iaikPkcs11Wrapper.jar;"+System.getProperty("user.dir")+"/prxsniff.jar "+System.getProperty("user.dir")+"/"+javaFile.getPath());
 
-        compiler.run(null, null, null, javaFile.getPath());
+        String[] CommandX = {System.getProperty("user.dir")+"/jre/bin/javac", "-cp", ".:"+System.getProperty("user.dir")+"/prxsniff.jar:"+System.getProperty("user.dir")+":"+System.getProperty("user.dir")+"/iaik_jce_full.jar:"+System.getProperty("user.dir")+"iaik_ssl.jar:"+System.getProperty("user.dir")+"/iaik_eccelerate.jar:"+System.getProperty("user.dir")+"/iaikPkcs11Provider.jar", javaFile.getPath()};
+
+        ProcessBuilder builder = new ProcessBuilder(CommandX);
+
+        for (String string : builder.command()){
+            System.out.print(string+" ");
+        }
+
+        Process p = builder.start();
+
+        String line;
+
+        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        while ((line = input.readLine()) != null) {
+            System.out.println(line);
+        }
+        input.close();
     }
 
 

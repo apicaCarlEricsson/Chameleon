@@ -1,0 +1,7 @@
+<ExecAgentJobController>
+	controllerId=1
+	description=Local Controller
+	controllerHost=localhost
+	controllerPort=7995
+	protocol=1
+</ExecAgentJobController>
