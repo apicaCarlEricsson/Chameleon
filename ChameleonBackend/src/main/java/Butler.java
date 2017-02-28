@@ -1,7 +1,9 @@
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -40,6 +42,19 @@ public class Butler {
     public static void startConsole(String[] args){
         ProxySniffer console = new ProxySniffer();
         console.main(args);
+    }
+
+    public static void runOSCommand(String[] args) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(args);
+        builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        builder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        Process pr = builder.start();
+        InputStreamReader isr = new InputStreamReader(pr.getInputStream());
+        BufferedReader buff = new BufferedReader(isr);
+
+        String line;
+        while((line = buff.readLine()) != null)
+            System.out.print(line);
     }
 
 }

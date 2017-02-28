@@ -5,7 +5,7 @@
 // -----------------------------------------
 //
 // Source: Bankgirot.java
-// Date  : 17 Feb 2017 14:36:51 ECT
+// Date  : 23 Feb 2017 13:38:39 ECT
 // Author: Apica ZebraTester V5.5-A / automatically generated
 //
 // Procedure Copyright by Ingenieurbuero David Fischer AG  |  A Company of the Apica Group
@@ -198,8 +198,6 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 	private RegExpBasedExtractor regExpBasedExtractor = null;   // re-used, scratch, used to extract vars from http response
 	private XpathBasedExtractor xpathBasedExtractor = null;   // re-used, scratch, used to extract vars from http response
 	
-	private static String testvar = null;                                        // var declaration from web admin var handler: scope = global
-
 	private volatile UserTransactionRuntimeHandler transactionHandler = new UserTransactionRuntimeHandler();		// re-used, support to manage user-defined transactions
 
 	/**
@@ -2873,13 +2871,6 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 				System.out.println("# DNS option -dnsperloop enabled");
 		}
 		
-		// log the initial value of all global vars
-		if (debugLoops || debugFailedLoops)
-		{
-			System.out.println("global var <<< testvar = " + testvar);
-			System.out.println();
-		}
-		
 		// calculate sampling offset and virtual user startup offset for cluster jobs (time shift per cluster member)
 		int samplingTimeshift = 0;	// value in seconds
 		if (!ParseArgs.hasOption(args, "-nosdelayCluster"))
@@ -2910,45 +2901,6 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 		
 		// initialize global context for plug-ins  
 		LoadtestPluginContext globalPluginContext = new LoadtestPluginContext(prxVersion, prxCharEncoding, new Bankgirot());
-		
-		// execute inline script "testInline" at start of test
-		LoadtestInlineScriptContext inlineScriptContext_1486930568480 = new LoadtestInlineScriptContext("testInline", ProxySnifferVarSourceInlineScript.EXEC_SCOPE_GLOBAL_START, "", getSymmetricEncryptContext(), performanceData, LoadtestInlineScriptContext.RESULT_TYPE_SET_OUTPUT_VARS, -1);
-		InlineScriptExecutor inlineScriptExecutor_1486930568480 = new InlineScriptExecutor(getInlineScriptCode_1486930568480(), inlineScriptContext_1486930568480);
-		Throwable inlineScriptThrowable_1486930568480 = null;
-		if (debugLoops)
-			System.out.println("Executing inline script \"" + inlineScriptContext_1486930568480.getScriptTitle() + "\"");
-		try
-		{
-			LoadtestInlineScriptVar inputVar1 = new LoadtestInlineScriptVar("testvar", Lib.nullToBlank(testvar), 3);		// note: parameter no. 3 is the scope of the var
-			inlineScriptContext_1486930568480.addInputVar(inputVar1);
-			inlineScriptExecutor_1486930568480.execute();		// execute inline script
-		}
-		catch (Throwable th_1486930568480)
-		{
-			inlineScriptThrowable_1486930568480 = th_1486930568480;
-		}
-		if (debugLoops)
-		{
-			for (String stdoutLine : inlineScriptContext_1486930568480.getOutputStreamData())
-				System.out.println(inlineScriptContext_1486930568480.getScriptTitle() + ": " + stdoutLine);
-		}
-		for (String stderrLine : inlineScriptContext_1486930568480.getErrorStreamData())
-			System.err.println(inlineScriptContext_1486930568480.getScriptTitle() + ": " + stderrLine);
-		if ((!inlineScriptExecutor_1486930568480.wasSuccessFulExecution()) || (inlineScriptThrowable_1486930568480 != null))
-		{
-			if (inlineScriptContext_1486930568480.isScriptAbort())
-			{
-				System.out.println("*** TEST ABORTED BY INLINE SCRIPT \"" + inlineScriptContext_1486930568480.getScriptTitle() + "\" ***");
-				System.out.println("Abort Message = " + inlineScriptContext_1486930568480.getScriptAbortMessage());
-				System.exit(1);
-			}
-			System.out.println("*** ERROR: Execution of inline script \"" + inlineScriptContext_1486930568480.getScriptTitle() + "\" failed ***");
-			if (inlineScriptThrowable_1486930568480 != null)
-				inlineScriptThrowable_1486930568480.printStackTrace(System.err);
-			System.exit(-2);
-		}
-		
-		
 		
 		
 		// --------------------------
@@ -3237,13 +3189,6 @@ public class Bankgirot extends HttpLoadTest implements Runnable, ThreadStepInter
 
 
 
-	
-	// source code of inline script "testInline"
-	public static String getInlineScriptCode_1486930568480()
-	{
-		return "print(success)";
-	}
-	
 
 }	// end of class
 

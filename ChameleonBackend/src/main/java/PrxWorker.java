@@ -1,4 +1,5 @@
 import dfischer.generator.CreateLoadtestProgram;
+import dfischer.keymanager.common.Key;
 import dfischer.proxysniffer.*;
 import dfischer.utils.Base64Decoder;
 import dfischer.utils.LoadtestInlineScriptContext;
@@ -188,7 +189,7 @@ public class PrxWorker {
         return 200;
     }
 
-    public void generateLoadTest() throws Exception {
+    public void generateLoadTest() {
         DisplayListCache cache = new DisplayListCache();
 
         Vector dataRecord = prxdat.getProxyData();
@@ -197,12 +198,27 @@ public class PrxWorker {
             cache.add((ProxyDataRecord) dataRecord.get(i),i,i);
         }
 
+        System.out.println("--- Generated Cache ----");
+
         ProxyAdminNetCmd admin = new ProxyAdminNetCmd("localhost",7998);
 
         CreateLoadtestProgram generator = new CreateLoadtestProgram(new NextProxyConfig(), 2,prxdat.getProjectName()+".prxdat");
 
-        generator.write(cache,admin,prxdat.getVarSourceHandler(),prxdat.getVarHandler(),prxdat.getTransactionHandler(),prxdat.getExternalResources()
-                ,new PrintWriter(new FileOutputStream(prxdat.getProjectName()+".java")));
+        System.out.println("--- Create LoadTest Program Done ----");
+
+        try {
+
+            //TODO Fix so that it dynamically loads from file
+            //File javaKeyFile = new File(System.getProperty("user.dir")+"/prxsniff.key");
+            ProxySnifferSettings.key= new Key("aQAA-DgQR-AAAU-VGgH-*3Q@");
+            System.out.println("--- Writing Java File ----");
+            generator.write(cache,admin,prxdat.getVarSourceHandler(),prxdat.getVarHandler(),prxdat.getTransactionHandler(),prxdat.getExternalResources()
+                    ,new PrintWriter(new FileOutputStream(System.getProperty("user.dir")+"/"+prxdat.getProjectName()+".java")));
+            System.out.println("--- Done Writing Java File ----");
+        } catch (Exception e) {
+            System.out.println("--- IO Exception encountered when creating "+prxdat.getProjectName()+".java"+" ----");
+            e.printStackTrace();
+        }
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager sfm = compiler.getStandardFileManager(null, null, null);
@@ -223,23 +239,26 @@ public class PrxWorker {
 
         //compiler.run(null, null, null, "-classpath "+System.getProperty("user.dir")+"/iaik_eccelerate.jar;"+System.getProperty("user.dir")+"/iaik_eccelerate_ssl.jar;"+System.getProperty("user.dir")+"/iaik_jce_full.jar;"+System.getProperty("user.dir")+"/iaik_ssl.jar;"+System.getProperty("user.dir")+"/iaikPkcs11Provider.jar;"+System.getProperty("user.dir")+"/iaikPkcs11Wrapper.jar;"+System.getProperty("user.dir")+"/prxsniff.jar "+System.getProperty("user.dir")+"/"+javaFile.getPath());
 
-        String[] CommandX = {System.getProperty("user.dir")+"/jre/bin/javac", "-cp", ".:"+System.getProperty("user.dir")+"/prxsniff.jar:"+System.getProperty("user.dir")+":"+System.getProperty("user.dir")+"/iaik_jce_full.jar:"+System.getProperty("user.dir")+"iaik_ssl.jar:"+System.getProperty("user.dir")+"/iaik_eccelerate.jar:"+System.getProperty("user.dir")+"/iaikPkcs11Provider.jar", javaFile.getPath()};
+        String[] CommandX = {System.getProperty("user.dir")+"/jre/bin/javac", "-cp", System.getProperty("user.dir")+"/prxsniff.jar:"+System.getProperty("user.dir")+":"+System.getProperty("user.dir")+"/iaik_jce_full.jar:"+System.getProperty("user.dir")+"/iaik_ssl.jar:"+System.getProperty("user.dir")+"/iaik_eccelerate.jar:"+System.getProperty("user.dir")+"/iaikPkcs11Provider.jar", System.getProperty("user.dir")+"/"+javaFile.getPath()};
 
         ProcessBuilder builder = new ProcessBuilder(CommandX);
 
         for (String string : builder.command()){
             System.out.print(string+" ");
         }
+        System.out.println();
 
-        Process p = builder.start();
+        try {
+            Process p = builder.start();
 
-        String line;
+            String line;
 
-        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        while ((line = input.readLine()) != null) {
-            System.out.println(line);
-        }
-        input.close();
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            while ((line = input.readLine()) != null) {
+                System.out.println(line);
+            }
+            input.close();
+        }catch (IOException e){e.printStackTrace();}
     }
 
 

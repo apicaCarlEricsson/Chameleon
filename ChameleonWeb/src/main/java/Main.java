@@ -3,6 +3,7 @@ import com.google.gson.GsonBuilder;
 import dfischer.proxysniffer.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import static spark.Spark.*;
 
@@ -15,6 +16,8 @@ public class Main {
                 .setExclusionStrategies(new PrxExclStrat())
                 .registerTypeAdapter(HttpResponse.class, new HttpResponseSerializer())
                 .create();
+
+        File parent = new File(System.getProperty("user.dir"));
         
         port(7880);
 
@@ -137,22 +140,47 @@ public class Main {
         });
 
 
-        get("/runTest/:scriptName/:numUsers/:maxLoops/:duration", (req, res) -> {
+        /*get("/runTest/:scriptName/:numUsers/:maxLoops/:duration", (req, res) -> {
             try {
                 int numUsers = Integer.parseInt(req.params(":numUsers"));
                 int maxLoops = Integer.parseInt(req.params(":maxLoops"));
                 int duration = Integer.parseInt(req.params(":duration"));
 
-                return LoadTestRunner.runJob(req.params(":scriptName"), numUsers,maxLoops,1,duration,9999,"tls11");
+                int jobId = LoadTestRunner.runJob(req.params(":scriptName"), numUsers,maxLoops,1,duration,9999,"tls11");
+                res.type("application/json");
+                return "{\"jobId\": "+jobId+"}";
             } catch (Exception e) {
-                e.printStackTrace();
+                res.type("application/json");
+                return "{\"jobId\": -1}";
             }
-            return 200;
+        });*/
+
+        post("/runTest", (req, res) -> {
+            ScriptConfig script = gsonPrxDat.fromJson(req.body(),ScriptConfig.class);
+            int jobId = LoadTestRunner.runJob(script.currentScript,script.userNumber, script.iterationsPerUser, 1, script.duration, 9999, "tls11", script.additionalOptions);
+            res.type("application/json");
+            return "{\"jobId\": "+jobId+"}";
         });
 
-        File parent = new File(System.getProperty("user.dir"));
 
-        Butler.startConsole(new String[]{"-RESTAPIServer","-webadmin", "-ExecAgent", "-runtimedatadir", parent.getPath()+"/RuntimeData","-jobdir",parent.getPath()+"/ExecAgentJobs"});
+        get("/getJobStatus/:jobId", (req, res) -> {
+            res.type("application/json");
+            return "{\"status\": "+LoadTestRunner.checkJobStatus(Integer.parseInt(req.params(":jobId")))+"}";
+        });
+
+        get("/getJobData/:jobId", (req, res) -> {
+            res.type("application/json");
+            return LoadTestRunner.getJobStatistics(Integer.parseInt(req.params(":jobId")));
+        });
+
+        new Thread(() -> {
+            try {
+                Butler.runOSCommand(new String[]{parent.getPath()+"/jre/bin/java", "-cp", ":*", "ProxySniffer", "-RESTAPIServer", "-webadmin", "-ExecAgent", "-runtimedatadir", parent.getPath() + "/RuntimeData", "-jobdir", parent.getPath() + "/ExecAgentJobs"});
+            } catch (IOException e) {
+                System.out.println("Unable to start ZebraTester Console");
+            }
+        }).start();
+
 
     }
 
