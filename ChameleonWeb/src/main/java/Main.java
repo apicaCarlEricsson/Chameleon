@@ -159,12 +159,14 @@ public class Main {
             ScriptConfig script = gsonPrxDat.fromJson(req.body(),ScriptConfig.class);
             int jobID=LoadTestRunner.runJob(script.currentScript,script.userNumber, script.iterationsPerUser, 1, script.duration, 9999, "tls11", script.additionalOptions);
             res.type("application/json");
-            return gsonPrxDat.toJson(new Responses.runTestResponse(jobID));
+            return gsonPrxDat.toJson(new Responses(jobID));
         });
 
 
         get("/getJobStatus/:jobId", (req, res) -> {
-            return LoadTestRunner.checkJobStatus(Integer.parseInt(req.params(":jobId")));
+            int status = LoadTestRunner.checkJobStatus(Integer.parseInt(req.params(":jobId")));
+            res.type("application/json");
+            return gsonPrxDat.toJson(new Responses(status));
         });
 
         get("/getJobData/:jobId", (req, res) -> {

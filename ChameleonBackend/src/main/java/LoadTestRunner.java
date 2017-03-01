@@ -21,7 +21,7 @@ public class LoadTestRunner {
     public static int runJob (String jobName, int userNumber, int maxLoops, int startUpDelay, int duration, int execAgentID, String sslSettings, String additonalOptions) throws Exception{
         List<String> CommandX = new ArrayList<>();
 
-        CommandX.addAll(Arrays.asList(System.getProperty("user.dir")+"/jre/bin/java","-cp",":*","PrxJob","transmitJob","Local Exec Agent",System.getProperty("user.dir")+"/"+jobName+".class", "-u", Integer.toString(userNumber), "-d", Integer.toString(duration), "-t", "60","-maxloops", Integer.toString(maxLoops), "-sampling", "15", "-percpage", "100", "-percurl", "20", "-maxerrmem", "20", "-nolog", "-thinkTime","0"));
+        CommandX.addAll(Arrays.asList(System.getProperty("user.dir")+"/jre/bin/java","-cp",":*","PrxJob","transmitJob","Local Exec Agent",System.getProperty("user.dir")+"/"+jobName+".class", "-u", Integer.toString(userNumber), "-d", Integer.toString(duration), "-t", "60","-maxloops", Integer.toString(maxLoops), "-sampling", "15", "-percpage", "100", "-percurl", "20", "-maxerrmem", "20", "-nolog"));
 
         CommandX.addAll(Arrays.asList(additonalOptions.split(" ")));
 

@@ -669,7 +669,11 @@
     <script src="/js/finder.min.js" type="application/javascript"></script>
     <script src="/js/jquery.finder.js" type="application/javascript"></script>
     <script src="/js/mousetrap.min.js" type="application/javascript"></script>
+    <script src="/js/exporting.js" type="application/javascript"></script>
+    <script src="/js/highcharts.js" type="application/javascript"></script>
     <script>
+        var chart;
+        var currentJobId;
         $(document).ready(function(e) {
             $.ajax({url: "prxMetaData", success: function(result){
                 if ("proxyData" in result){
@@ -888,42 +892,104 @@
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success:function(result){
-                        renderCharts(result);
+                        currentJobId=result.responseID;
+                        HighchartsGraph();
                     }
                 });
                  
             });
             
+            //Data for charting
+            /**
+ * Request data from the server, add it to the graph and set a timeout 
+ * to request again
+ */
+            function requestData(jobID) {
+                $.ajax({
+                    url: "getJobData/"+currentJobId,
+                    dataType: 'json',
+                    success: function(result) {
+                        var series = chart.series[0],
+                            shift = series.data.length > 20; // shift if the series is 
+                                                             // longer than 20
+                        var y=result.jobRealTimeData.averagePassedUrlCallsPerSecond,
+                            x=(new Date()).getTime();
+
+                        // add the point
+                        chart.series[0].addPoint([x,y], true, shift);
+                        setTimeout(requestData, 3000);    
+                    },
+                    cache: false
+                });
+            }
+            
+            //Charting
+            function HighchartsGraph(){
+                chart = new Highcharts.Chart({
+                    chart: {
+                        renderTo: 'graph1',
+                        defaultSeriesType: 'line',
+                        events: {
+                            load: requestData
+                        }
+                    },
+                    title: {
+                        text: 'Requests per second'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        tickPixelInterval: 150,
+                        maxZoom: 20 * 1000
+                    },
+                    yAxis: {
+                        minPadding: 0.2,
+                        maxPadding: 0.2,
+                        title: {
+                            text: 'Req/s',
+                            margin: 80
+                        }
+                    },
+                    series: [{
+                        name: 'Requests per second',
+                        data: []
+                    }]
+                });
+            }
+            
             //Check status of job
-            function checkLiveJob(jobID){
-                $.ajax({url:"getJobStatus/"+jobID,success:function(result){
-                    console.log(result);
-                    return result;
-                }});
+            /*function checkLiveJob(jobID){
+                var data;
+                $.ajax({url:"getJobStatus/"+jobID,
+                        dataType:"json",
+                        success:function(result){
+                            data=result.responseID;
+                            callback.call(data);
+                        }});
+                return data;
+            }
+            
+            //Actually renders chart ---- For test purposes only
+            function actualRenderChart(data){
+                $('#graph1').html('<p>'+data+'</p>');
             }
             
             //Check load test live data
             function getLiveData(jobID){
-                $.ajax({url:"getJobData/"+jobID,success:function(result){
-                    return result;
-                }});
+                $.ajax({url:"getJobData/"+jobID,
+                        dataType:"json",
+                        success:function(result){
+                            actualRenderChart(result);
+                        }});
             }
             
             //Render live data charts
             var intervalID;
             
             function renderCharts(jobID){
-                var running=true;
                 intervalID=setInterval(function(){
-                    var check = checkLiveJob(jobID);
-                    console.log("Value is "+check);
-                    if(checkLiveJob(jobID)=!12){
-                        clearInterval(intervalID);
-                    }else{
-                       $('#graph1').html('<p>'+getLiveData(jobID)+'</p>'); 
-                    }
-                },2000);
-            }
+                    getLiveData(jobID);
+                },5000);
+            }*/
             
             //Trigger for saving script with specific name
             $("#saveAsScriptButton").click(function() {
