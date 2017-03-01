@@ -888,12 +888,42 @@
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success:function(result){
-                        alert("Load test is running");
+                        renderCharts(result);
                     }
                 });
-                
-                
+                 
             });
+            
+            //Check status of job
+            function checkLiveJob(jobID){
+                $.ajax({url:"getJobStatus/"+jobID,success:function(result){
+                    console.log(result);
+                    return result;
+                }});
+            }
+            
+            //Check load test live data
+            function getLiveData(jobID){
+                $.ajax({url:"getJobData/"+jobID,success:function(result){
+                    return result;
+                }});
+            }
+            
+            //Render live data charts
+            var intervalID;
+            
+            function renderCharts(jobID){
+                var running=true;
+                intervalID=setInterval(function(){
+                    var check = checkLiveJob(jobID);
+                    console.log("Value is "+check);
+                    if(checkLiveJob(jobID)=!12){
+                        clearInterval(intervalID);
+                    }else{
+                       $('#graph1').html('<p>'+getLiveData(jobID)+'</p>'); 
+                    }
+                },2000);
+            }
             
             //Trigger for saving script with specific name
             $("#saveAsScriptButton").click(function() {
